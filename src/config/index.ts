@@ -6,7 +6,7 @@ export const SITE_CONFIG: SiteConfig = {
   description:
     "Software Engineer based in Cebu, Philippines. I specialize in building and deploying web applications and systems — turning complex problems into clean, practical solutions.",
   lang: "en",
-  siteLogo: "/francis-small.png",
+  siteLogo: "/francis-grad-small.png",
   navLinks: [
     { text: "Experience", href: "#experience" },
     { text: "Skills", href: "#skills" },            // <— added
@@ -123,6 +123,6 @@ export const SITE_CONTENT: SiteContent = {
       With a strong background in both front‑end and back‑end technologies, 
       I thrive on building scalable applications that truly serve users’ needs.
     `,
-    image: "/francis-big.jpg",                        // <— update to your actual image
+    image: "/francis-grad-big.jpg",                        // <— update to your actual image
   },
 };
