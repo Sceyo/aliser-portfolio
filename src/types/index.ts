@@ -17,19 +17,32 @@ export interface SkillCategories {
   other?: string[];
 }
 
+export interface Certification {
+  name: string;
+  issuer: string;
+  date: string;
+  featured?: boolean;
+  description?: string;
+}
+
+export interface Coursework {
+  name: string;
+  issuer: string;
+  date: string;
+}
+
+export interface SkillsAndCertifications {
+  skillCategories: SkillCategories;
+  certifications: Certification[];
+  additionalCoursework?: Coursework[];
+}
+
 export interface SiteContent {
   hero: HeroProps;
   experience: ExperienceProps[];
   projects: ProjectProps[];
   about: AboutProps;
-  skillsAndCertifications: {
-    skillCategories: SkillCategories;          // <-- now an object of categories
-    certifications: {
-      name: string;
-      issuer: string;
-      date: string;
-    }[];
-  };
+  skillsAndCertifications: SkillsAndCertifications;
 }
 
 export interface HeroProps {
