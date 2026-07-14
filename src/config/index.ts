@@ -58,12 +58,24 @@ export const SITE_CONTENT: SiteContent = {
         name: "Google IT Automation with Python",
         issuer: "Coursera / Google",
         date: "May 2026",
+        featured: true,
       },
       {
         name: "AI Apprentice to AI Architect",
         issuer: "Xerox Philippines",
         date: "Jan 2026",
+        featured: true,
+        description:
+          "100+ hour learning journey covering NLP fundamentals (BERT), neural network frameworks (Keras, CNTK), MLOps pipelines, and AI ethics & governance.",
       },
+      {
+        name: "AWS Educate Introduction to Cloud 101",
+        issuer: "Amazon Web Services (AWS)",
+        date: "Jul 2025",
+        featured: true,
+      },
+    ],
+    additionalCoursework: [
       {
         name: "Prompt Engineering with Generative AI Tools",
         issuer: "Lexmark Cebu",
@@ -79,39 +91,34 @@ export const SITE_CONTENT: SiteContent = {
         issuer: "Xerox Philippines",
         date: "Nov 2025",
       },
-      {
-        name: "AWS Educate Introduction to Cloud 101",
-        issuer: "Amazon Web Services (AWS)",
-        date: "Jul 2025",
-      },
     ],
   },
   projects: [
     {
       name: "PANN Backoffice",
       summary: "A Administration dashboard for managing the users, customers, stocks, products, categories, and sales",
-      linkPreview: "admin.ramyeoncorner.com",
+      linkPreview: "https://admin.ramyeoncorner.com/login",
       linkSource: "https://github.com/PANNRamyeon/Ramyeon-Backoffice",
       image: "/Backoffice.png",
     },
     {
       name: "PANN Ramyeon POS",
       summary: "A point-of-sale system for managing sales transactions and inventory.",
-      linkPreview: "/",
+      linkPreview: "https://drive.google.com/file/d/1bcqhgo44QaWIVQhePaE-cseFhSUGZvxC/view?usp=sharing",
       linkSource: "https://github.com/PANNRamyeon/Ramyeon-POS",
       image: "/PANN.png",
     },
     {
       name: "PANN Ramyeon Corner",
       summary: "A customer facing website that handles online orders for Ramyeon Food Corner.",
-      linkPreview: "/",
-      linkSource: "ramyeoncorner.com",
+      linkPreview: "https://ramyeoncorner.com/",
+      linkSource: "https://github.com/PANNRamyeon/Ramyeon-POS",
       image: "/Ramyeon.png",
     },
     {
       name: "PAD-Q",
       summary: "An Queuing system for paddle sports such as Pickleball, Badminton, and Table Tennis. It allows users to join a queue for a specific sport and can check when it's their turn to play.",
-      linkPreview: "/",
+      linkPreview: "https://pad-q.vercel.app/",
       linkSource: "https://github.com/Sceyo/PadQ",
       image: "/PADQ.png",
     }

@@ -14,10 +14,17 @@ interface Props {
     name: string;
     issuer: string;
     date: string;
+    featured?: boolean;
+    description?: string;
+  }[];
+  additionalCoursework?: {
+    name: string;
+    issuer: string;
+    date: string;
   }[];
 }
 
-const { skillCategories, certifications } = Astro.props;
+const { skillCategories, certifications, additionalCoursework = [] } = Astro.props;
 
 // Helper to map category keys to display names
 const categoryLabels: Record<string, string> = {
@@ -52,25 +59,44 @@ const categoryLabels: Record<string, string> = {
 
   <!-- Certifications -->
   <div>
-  <h3 class="mb-4 font-serif text-xl font-semibold text-white">Certifications</h3>
-  <ul class="space-y-4">
-    {certifications.map((cert) => (
-      <li class="group relative overflow-hidden rounded-lg border border-white/10 bg-white/5 p-4 transition hover:border-primary/30 hover:bg-white/[0.07]">
-        <!-- decorative left accent -->
-        <div class="absolute left-0 top-0 h-full w-1 bg-primary/60 group-hover:bg-primary"></div>
-        <div class="flex items-start gap-3 pl-3">
-          <!-- optional small icon -->
-          <svg class="mt-0.5 h-5 w-5 shrink-0 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
-          <div>
-            <h4 class="font-medium text-white">{cert.name}</h4>
-            <p class="text-sm text-white/70">{cert.issuer}</p>
-            <span class="mt-1 inline-block rounded-full bg-primary/20 px-2.5 py-0.5 text-xs text-primary">{cert.date}</span>
+    <h3 class="mb-4 font-serif text-xl font-semibold text-white">Certifications</h3>
+    <ul class="space-y-4">
+      {certifications.map((cert) => (
+        <li class="group relative overflow-hidden rounded-lg border border-white/10 bg-white/5 p-4 transition hover:border-primary/30 hover:bg-white/[0.07]">
+          <!-- decorative left accent -->
+          <div class="absolute left-0 top-0 h-full w-1 bg-primary/60 group-hover:bg-primary"></div>
+          <div class="flex items-start gap-3 pl-3">
+            <!-- optional small icon -->
+            <svg class="mt-0.5 h-5 w-5 shrink-0 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            <div>
+              <h4 class="font-medium text-white">{cert.name}</h4>
+              <p class="text-sm text-white/70">{cert.issuer}</p>
+              <span class="mt-1 inline-block rounded-full bg-primary/20 px-2.5 py-0.5 text-xs text-primary">{cert.date}</span>
+              {cert.description && (
+                <p class="mt-2 text-sm text-white/60">{cert.description}</p>
+              )}
+            </div>
           </div>
-        </div>
-      </li>
-    ))}
-  </ul>
-</div>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <!-- Additional coursework: collapsed, single line -->
+  {additionalCoursework.length > 0 && (
+    <div class="mt-6">
+      <h3 class="mb-2 font-serif text-sm font-semibold uppercase tracking-wide text-white/50">
+        Additional Coursework
+      </h3>
+      <p class="text-sm text-white/60">
+        {additionalCoursework.map((course, i) => (
+          <>
+            {course.name} ({course.issuer}){i < additionalCoursework.length - 1 ? ", " : ""}
+          </>
+        ))}
+      </p>
+    </div>
+  )}
 </Section>
