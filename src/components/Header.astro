@@ -11,7 +11,11 @@ const { siteLogo, navLinks } = Astro.props;
 <header
   class="sticky top-0 z-50 mx-auto flex max-w-5xl animate-slide-in justify-between bg-black px-5 py-6"
 >
-  <a href="/" aria-label="Home link">
+  <a
+    href="/"
+    aria-label="Go to home page"
+    class="rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+  >
     <Image
       class="rounded-full"
       src={siteLogo}
@@ -25,9 +29,10 @@ const { siteLogo, navLinks } = Astro.props;
   <button
     type="button"
     id="menu-button"
-    class="px-1.5 text-neutral sm:hidden"
+    class="rounded-sm px-1.5 text-neutral focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:hidden"
     aria-expanded="false"
     aria-controls="main-menu"
+    aria-label="Open navigation menu"
   >
     <Menu />
   </button>
@@ -41,7 +46,7 @@ const { siteLogo, navLinks } = Astro.props;
         navLinks.map((link) => (
           <li class="relative">
             <a
-              class={`nav-item relative block p-2 text-sm font-medium transition-all duration-500 after:absolute after:bottom-0 after:left-2/4 after:h-2 after:w-1 after:-translate-x-2/4 after:text-primary after:opacity-0 after:content-['•'] hover:text-white`}
+              class={`nav-item relative block rounded-sm p-2 text-sm font-medium transition-all duration-500 after:absolute after:bottom-0 after:left-2/4 after:h-2 after:w-1 after:-translate-x-2/4 after:text-primary after:opacity-0 after:content-['•'] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary`}
               href={link.href}
             >
               {link.text}
@@ -63,11 +68,30 @@ const { siteLogo, navLinks } = Astro.props;
     menu?.classList.toggle("hidden");
     const isHidden = menu?.classList.contains("hidden");
     button?.setAttribute("aria-expanded", `${!isHidden}`);
+    button?.setAttribute(
+      "aria-label",
+      isHidden ? "Open navigation menu" : "Close navigation menu",
+    );
+  };
+
+  const closeMenu = () => {
+    if (!menu?.classList.contains("hidden")) {
+      menu?.classList.add("hidden");
+      button?.setAttribute("aria-expanded", "false");
+      button?.setAttribute("aria-label", "Open navigation menu");
+    }
   };
 
   button?.addEventListener("click", toggleMenu);
   navItems.forEach((item) => {
-    item?.addEventListener("click", toggleMenu);
+    item?.addEventListener("click", closeMenu);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !menu?.classList.contains("hidden")) {
+      closeMenu();
+      if (button instanceof HTMLElement) button.focus();
+    }
   });
 
   // Update navigation based on scroll position with Intersection Observer

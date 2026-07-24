@@ -48,8 +48,12 @@ export interface SiteContent {
 export interface HeroProps {
   name: string;
   specialty: string;
+  headline: string;
   summary: string;
   email: string;
+  location: string;
+  availability: string;
+  resume: string;
 }
 
 export interface ExperienceProps {
@@ -62,8 +66,19 @@ export interface ExperienceProps {
 
 export interface ProjectProps {
   name: string;
+  projectType: string;
   summary: string;
   image: string;
+  role: string;
+  status: string;
+  contribution: string;
+  results: string[];
+  technologies: string[];
+  gallery: {
+    src: string;
+    alt: string;
+    caption: string;
+  }[];
   linkPreview?: string;
   linkSource?: string;
 }

@@ -12,13 +12,13 @@ import "../styles/global.css";
 
 <Layout>
   <Hero {...SITE_CONTENT.hero} />
+  <Projects projects={SITE_CONTENT.projects} />
   <Experience experience={SITE_CONTENT.experience} />
   <Skills
-  skillCategories={SITE_CONTENT.skillsAndCertifications.skillCategories}
-  certifications={SITE_CONTENT.skillsAndCertifications.certifications}
-  additionalCoursework={SITE_CONTENT.skillsAndCertifications.additionalCoursework}
-/>
-  <Projects projects={SITE_CONTENT.projects} />
+    skillCategories={SITE_CONTENT.skillsAndCertifications.skillCategories}
+    certifications={SITE_CONTENT.skillsAndCertifications.certifications}
+    additionalCoursework={SITE_CONTENT.skillsAndCertifications
+      .additionalCoursework}
+  />
   <About {...SITE_CONTENT.about} name={SITE_CONTENT.hero.name} />
-  
 </Layout>

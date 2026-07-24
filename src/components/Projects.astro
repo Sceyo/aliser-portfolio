@@ -12,48 +12,173 @@ const { projects } = Astro.props;
 
 <Section text="Featured Projects" href="projects">
   {
-    projects.map(({ name, summary, image, linkPreview, linkSource }, index) => {
-      const top = 98 + index * 40;
-      return (
-        <div
-          style={`top: ${top}px;`}
-          class="sticky mb-12 rounded-2xl border border-neutral/20 bg-black"
-        >
-          <div class="bg-difu relative z-1 grid h-145 w-full grid-rows-2 rounded-2xl bg-[#1c232d]/85 before:absolute before:inset-0 before:z-[-1] before:rounded-2xl before:bg-[url(/raja.png)] before:bg-size-[128px] before:bg-repeat before:opacity-5 before:content-[''] sm:grid-cols-2 sm:grid-rows-1 md:h-96">
-            <div class="px-6 pt-12">
-              <h3 class="mb-5 font-serif text-3xl font-medium text-primary">
-                {name}
-              </h3>
-              <p class="text-base text-neutral">{summary}</p>
-              <div class="flex gap-5 pt-10 text-white">
-                <a
-                  href={linkSource}
-                  target="_blank"
-                  class="after:relative after:-bottom-1.25 after:content-[url(/external.svg)] hover:underline"
-                >
-                  Source
-                </a>
-                <a
-                  href={linkPreview}
-                  target="_blank"
-                  class="after:relative after:-bottom-1.25 after:content-[url(/external.svg)] hover:underline"
-                >
-                  Preview
-                </a>
-              </div>
-            </div>
-            <div class="flex items-end justify-end overflow-hidden">
+    projects.map((project, index) => (
+      <article class="mb-12 overflow-hidden rounded-3xl border border-white/10 bg-[#151d27] shadow-2xl shadow-black/20">
+        <details class="group/project">
+          <summary class="grid cursor-pointer list-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary lg:grid-cols-[1.05fr_0.95fr] [&::-webkit-details-marker]:hidden">
+            <div class="aspect-video overflow-hidden bg-[#0a1017] lg:aspect-auto lg:min-h-80">
               <Image
-                class="h-full w-[95%] rounded-ss-xl rounded-ee-2xl object-none object-top-left sm:h-[85%] sm:w-full"
-                src={image}
-                alt={name}
+                class="h-full w-full object-cover object-top transition duration-500 group-hover/project:scale-[1.01]"
+                src={project.image}
+                alt={`${project.name} interface preview`}
                 width="736"
                 height="483"
               />
             </div>
+
+            <div class="flex flex-col p-6 sm:p-9 lg:p-10">
+              <div class="mb-5 flex flex-wrap items-center gap-2 text-xs font-semibold tracking-[0.12em] uppercase">
+                <span class="rounded-full bg-primary/15 px-3 py-1.5 text-primary">
+                  {project.projectType}
+                </span>
+                {index === 0 && (
+                  <span class="text-emerald-300">Flagship case study</span>
+                )}
+              </div>
+
+              <h3 class="font-serif text-3xl font-semibold text-white sm:text-4xl">
+                {project.name}
+              </h3>
+              <p class="mt-5 text-base text-neutral">{project.summary}</p>
+
+              <div class="mt-auto flex items-center justify-between gap-4 pt-8">
+                <span class="text-sm font-semibold text-white">
+                  View project details
+                </span>
+                <span
+                  class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-xl text-primary transition group-open/project:rotate-45 group-open/project:bg-primary group-open/project:text-white"
+                  aria-hidden="true"
+                >
+                  +
+                </span>
+              </div>
+            </div>
+          </summary>
+
+          <div class="grid border-t border-white/10 bg-black/15 lg:grid-cols-[1.05fr_0.95fr]">
+            <div class="border-b border-white/10 p-6 sm:p-8 lg:border-r lg:border-b-0">
+              <div class="mb-5 flex items-end justify-between gap-4">
+                <div>
+                  <p class="text-xs font-semibold tracking-[0.12em] text-primary uppercase">
+                    Project gallery
+                  </p>
+                  <h4 class="mt-1 font-serif text-2xl font-semibold text-white">
+                    Inside {project.name}
+                  </h4>
+                </div>
+                <span class="text-xs text-neutral">
+                  {project.gallery.length} screens
+                </span>
+              </div>
+
+              <div class="grid gap-5">
+                {project.gallery.map((galleryImage, imageIndex) => (
+                  <figure>
+                    <a
+                      href={galleryImage.src}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="group/image relative block overflow-hidden rounded-xl border border-white/10 bg-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+                      aria-label={`Open full-size ${galleryImage.alt}`}
+                    >
+                      <Image
+                        class="aspect-video w-full object-cover object-top transition duration-300 group-hover/image:scale-[1.01]"
+                        src={galleryImage.src}
+                        alt={galleryImage.alt}
+                        width="736"
+                        height="414"
+                      />
+                      <span
+                        class="absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/75 text-lg font-medium text-white shadow-lg backdrop-blur transition group-hover/image:bg-primary"
+                        aria-hidden="true"
+                      >
+                        +
+                      </span>
+                      <span
+                        class="absolute bottom-3 left-3 rounded-full bg-black/75 px-2.5 py-1 text-[0.7rem] font-semibold text-white/80 backdrop-blur"
+                        aria-hidden="true"
+                      >
+                        {String(imageIndex + 1).padStart(2, "0")}
+                      </span>
+                    </a>
+                    <figcaption class="mt-2 text-xs text-neutral">
+                      {galleryImage.caption}
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            </div>
+
+            <div class="p-6 sm:p-9 lg:p-10">
+              <dl class="grid gap-4 border-b border-white/10 pb-6 sm:grid-cols-2">
+                <div>
+                  <dt class="text-xs font-semibold tracking-wider text-white/45 uppercase">
+                    My role
+                  </dt>
+                  <dd class="mt-1 text-sm text-white">{project.role}</dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-semibold tracking-wider text-white/45 uppercase">
+                    Status
+                  </dt>
+                  <dd class="mt-1 text-sm text-white">{project.status}</dd>
+                </div>
+              </dl>
+
+              <div class="mt-6">
+                <h4 class="text-sm font-semibold text-white">
+                  What I contributed
+                </h4>
+                <p class="mt-2 text-sm leading-6 text-neutral">
+                  {project.contribution}
+                </p>
+              </div>
+
+              <ul class="mt-6 grid gap-3">
+                {project.results.map((result) => (
+                  <li class="relative pl-6 text-sm leading-6 text-white/80 before:absolute before:top-2 before:left-0 before:h-2 before:w-2 before:rounded-full before:bg-primary">
+                    {result}
+                  </li>
+                ))}
+              </ul>
+
+              <ul
+                class="mt-7 flex flex-wrap gap-2"
+                aria-label={`${project.name} technologies`}
+              >
+                {project.technologies.map((technology) => (
+                  <li class="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-neutral">
+                    {technology}
+                  </li>
+                ))}
+              </ul>
+
+              <div class="mt-8 flex flex-wrap gap-5 text-sm font-semibold text-white">
+                {project.linkPreview && (
+                  <a
+                    href={project.linkPreview}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="rounded-sm hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+                  >
+                    View live project <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+                {project.linkSource && (
+                  <a
+                    href={project.linkSource}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="rounded-sm hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+                  >
+                    View source <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      );
-    })
+        </details>
+      </article>
+    ))
   }
 </Section>
