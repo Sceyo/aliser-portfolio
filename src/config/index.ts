@@ -99,7 +99,7 @@ export const SITE_CONTENT: SiteContent = {
     },
     {
       name: "PANN Ramyeon POS",
-      projectType: "Team project · Point of sale",
+      projectType: "Client capstone · Point of sale",
       summary:
         "A locally packaged restaurant POS designed to connect cashier workflows with sales, inventory, promotions, reporting, online orders, and digital payments.",
       role: "Full-Stack Developer",
@@ -147,7 +147,7 @@ export const SITE_CONTENT: SiteContent = {
     },
     {
       name: "Ramyeon Corner",
-      projectType: "Team project · Online ordering",
+      projectType: "Client capstone · Online ordering",
       summary:
         "A mobile-friendly customer ordering experience for browsing products and promotions, placing pickup or delivery orders, and managing loyalty activity.",
       role: "Shared Backend & Integrations Contributor",
