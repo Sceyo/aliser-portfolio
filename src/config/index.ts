@@ -41,7 +41,8 @@ export const SITE_CONTENT: SiteContent = {
       startDate: "Sep 2025",
       endDate: "Feb 2026",
       summary: [
-        "Built an automated attendance-reporting workflow with Microsoft Power Automate, reducing manual reporting effort and improving data accuracy.",
+        "Developed a Microsoft Power Automate attendance workflow for a 10-person team that calculated daily clock-out reminders and delivered Friday work-hour summaries, reducing manual tracking from 5–15 minutes per day to 1–2 minutes.",
+        "Replaced a fully manual tracking process while keeping the implementation and company data confidential.",
         "Configured and troubleshot Cisco devices, including VLAN setup, operating-system recovery, and secure erasure.",
         "Supported CMDB validation and network deployment, including access-point installation and layout planning.",
         "Gained hands-on experience in enterprise IT operations, automation, and networking within a production environment.",
@@ -59,6 +60,7 @@ export const SITE_CONTENT: SiteContent = {
       contribution:
         "Developed notifications and operational alerts, user and staff-account management, inventory and sales-monitoring reports, and their supporting Vue interfaces and Django API functionality.",
       results: [
+        "Across all three PANN applications, the system completed 255 documented black-box tests.",
         "Passed all 130 documented black-box test cases with a 100% test-case acceptability rate.",
         "The combined Backoffice and POS system received a 4.96/5 “Very Acceptable” user-acceptance score after improvements.",
         "Helped migrate the shared data layer from MongoDB Atlas to access-pattern-driven AWS DynamoDB models and services.",
@@ -101,7 +103,7 @@ export const SITE_CONTENT: SiteContent = {
       name: "PANN Ramyeon POS",
       projectType: "Client capstone · Point of sale",
       summary:
-        "A locally packaged restaurant POS designed to connect cashier workflows with sales, inventory, promotions, reporting, online orders, and digital payments.",
+        "An offline-capable restaurant POS designed to keep cashier operations running locally and synchronize sales, inventory, and shift records with the cloud when connectivity returns.",
       role: "Full-Stack Developer",
       status: "Working prototype · Migration paused by client",
       contribution:
@@ -188,13 +190,13 @@ export const SITE_CONTENT: SiteContent = {
     },
     {
       name: "PAD-Q",
-      projectType: "Real-time web application · Sports",
+      projectType: "Independent product · Sports technology",
       summary:
         "A real-time queue manager for singles and doubles play, with multiple matchmaking modes designed to reduce repeated matchups and uneven wait times.",
-      role: "Developer",
+      role: "Founder & Full-Stack Developer",
       status: "Live prototype on Vercel",
       contribution:
-        "Built as a responsive host-and-spectator experience with room sharing, multi-court management, live scoring, player rotation, match history, analytics, and session recovery.",
+        "Founded, designed, and built PAD-Q as a responsive real-time platform with host and spectator experiences, room sharing, multi-court management, live scoring, player rotation, match history, analytics, and session recovery.",
       results: [
         "Matchmaking engines are supported by 146 passing automated tests, including simulations with up to 50 players.",
         "Supports default rotation, tournament, play-all, and skill-based matchmaking modes.",
@@ -243,9 +245,10 @@ export const SITE_CONTENT: SiteContent = {
     skillCategories: {
       languages: ["JavaScript", "TypeScript", "Python", "Java"],
       frontend: ["React.js", "Vue.js", "Next.js"],
-      backend: ["Django", "REST API Development", "Express.js"],
+      backend: ["Django", "REST API Development", "Node.js", "Express.js"],
       databases: ["AWS DynamoDB", "MongoDB", "Firebase", "MySQL"],
-      tools: ["Git", "GitHub", "Postman", "Microsoft Power Automate", "Codex"],
+      tools: ["Git", "GitHub", "Docker", "Postman", "Microsoft Power Automate"],
+      aiTools: ["Codex", "Claude Code"],
       other: [
         "Networking Fundamentals",
         "IT Operations",
@@ -258,20 +261,24 @@ export const SITE_CONTENT: SiteContent = {
         issuer: "Coursera / Google",
         date: "May 2026",
         featured: true,
+        credentialUrl:
+          "https://www.coursera.org/account/accomplishments/professional-cert/N06MD3P0PJEK",
       },
       {
         name: "AI Apprentice to AI Architect",
-        issuer: "Xerox Philippines",
+        issuer: "Lexmark Cebu",
         date: "Jan 2026",
         featured: true,
         description:
-          "100+ hour learning journey covering NLP fundamentals, neural-network frameworks, MLOps pipelines, and AI ethics and governance.",
+          "Internal 100+ hour learning journey covering NLP fundamentals, neural-network frameworks, MLOps pipelines, and AI ethics and governance.",
       },
       {
         name: "AWS Educate Introduction to Cloud 101",
         issuer: "Amazon Web Services",
         date: "Jul 2025",
         featured: true,
+        credentialUrl:
+          "https://www.credly.com/badges/72e4ea74-96be-41bc-a98b-7c9264af67ff/linked_in_profile",
       },
     ],
     additionalCoursework: [
@@ -294,7 +301,7 @@ export const SITE_CONTENT: SiteContent = {
   },
   about: {
     description:
-      "I’m Francis Aliser, a Cebu-based full-stack developer and software engineer with a BS in Information Technology from the University of San Carlos. I enjoy building practical systems that connect clean interfaces with reliable backend services. My experience spans retail platforms, workflow automation, real-time applications, cloud databases, and enterprise IT operations.",
+      "I’m Francis Aliser, a Cebu-based full-stack developer and software engineer who graduated with a BS in Information Technology from the University of San Carlos on July 3, 2026. I was an Academic & Financial Scholar under the Redemptorist Educational Assistance Program from 2020 to 2026. I enjoy building practical systems that connect clean interfaces with reliable backend services. My experience spans retail platforms, workflow automation, real-time applications, cloud databases, and enterprise IT operations.",
     image: "/francis-grad-big.jpg",
   },
 };

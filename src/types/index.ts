@@ -14,6 +14,7 @@ export interface SkillCategories {
   backend?: string[];
   databases?: string[];
   tools?: string[];
+  aiTools?: string[];
   other?: string[];
 }
 
@@ -23,6 +24,7 @@ export interface Certification {
   date: string;
   featured?: boolean;
   description?: string;
+  credentialUrl?: string;
 }
 
 export interface Coursework {
