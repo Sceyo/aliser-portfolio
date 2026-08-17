@@ -52,6 +52,7 @@ export const SITE_CONTENT: SiteContent = {
   projects: [
     {
       name: "PANN Backoffice",
+      featured: true,
       projectType: "Client capstone · Retail operations",
       summary:
         "A centralized administration platform for staff accounts, inventory, suppliers, promotions, customers, sales analytics, notifications, and operational logs.",
@@ -101,6 +102,7 @@ export const SITE_CONTENT: SiteContent = {
     },
     {
       name: "PANN Ramyeon POS",
+      featured: true,
       projectType: "Client capstone · Point of sale",
       summary:
         "An offline-capable restaurant POS designed to keep cashier operations running locally and synchronize sales, inventory, and shift records with the cloud when connectivity returns.",
@@ -149,6 +151,7 @@ export const SITE_CONTENT: SiteContent = {
     },
     {
       name: "Ramyeon Corner",
+      featured: true,
       projectType: "Client capstone · Online ordering",
       summary:
         "A mobile-friendly customer ordering experience for browsing products and promotions, placing pickup or delivery orders, and managing loyalty activity.",

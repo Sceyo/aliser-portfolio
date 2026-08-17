@@ -1,8 +1,9 @@
 ---
 import Header from "@components/Header.astro";
 import { Font } from "astro:assets";
-import { SITE_CONFIG } from "@config";
+import { SITE_CONFIG, SITE_CONTENT } from "@config";
 import Footer from "@components/Footer.astro";
+import Analytics from "@vercel/analytics/astro";
 
 const {
   title,
@@ -17,6 +18,52 @@ const {
 } = SITE_CONFIG;
 
 const ogImgUrl = new URL(socialImage, canonicalURL).href;
+const personId = `${canonicalURL}#person`;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": personId,
+      name: author,
+      url: canonicalURL,
+      image: new URL(siteLogo, canonicalURL).href,
+      jobTitle: SITE_CONTENT.hero.specialty,
+      email: `mailto:${SITE_CONTENT.hero.email}`,
+      homeLocation: {
+        "@type": "Place",
+        name: SITE_CONTENT.hero.location,
+      },
+      alumniOf: {
+        "@type": "CollegeOrUniversity",
+        name: "University of San Carlos",
+      },
+      sameAs: socialLinks.map(({ href }) => href),
+      knowsAbout: Object.values(
+        SITE_CONTENT.skillsAndCertifications.skillCategories,
+      ).flat(),
+    },
+    {
+      "@type": "ItemList",
+      name: `${author}'s featured software projects`,
+      itemListElement: SITE_CONTENT.projects.map((project, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "SoftwareApplication",
+          name: project.name,
+          description: project.summary,
+          applicationCategory: project.projectType,
+          author: { "@id": personId },
+          image: new URL(project.image, canonicalURL).href,
+          url: project.linkPreview ?? project.linkSource ?? canonicalURL,
+          codeRepository: project.linkSource,
+          keywords: project.technologies.join(", "),
+        },
+      })),
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -48,6 +95,13 @@ const ogImgUrl = new URL(socialImage, canonicalURL).href;
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={ogImgUrl} />
+
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(structuredData)}
+    />
+    <Analytics />
   </head>
   <body class="bg-black font-sans">
     <Header siteLogo={siteLogo} navLinks={navLinks} />
@@ -55,5 +109,33 @@ const ogImgUrl = new URL(socialImage, canonicalURL).href;
       <slot />
     </main>
     <Footer author={author} socialLinks={socialLinks} />
+    <script>
+      import { track } from "@vercel/analytics";
+
+      document.addEventListener("click", (event) => {
+        if (!(event.target instanceof Element)) return;
+
+        const target = event.target.closest<HTMLElement>(
+          "[data-analytics-event]",
+        );
+        if (!target) return;
+
+        const eventName = target.dataset.analyticsEvent;
+        if (!eventName) return;
+        if (eventName === "project_open" && target.closest("details")?.open) {
+          return;
+        }
+
+        const properties: Record<string, string> = {};
+        if (target.dataset.analyticsProject) {
+          properties.project = target.dataset.analyticsProject;
+        }
+        if (target.dataset.analyticsDestination) {
+          properties.destination = target.dataset.analyticsDestination;
+        }
+
+        track(eventName, properties);
+      });
+    </script>
   </body>
 </html>

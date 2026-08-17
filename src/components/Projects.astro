@@ -12,10 +12,14 @@ const { projects } = Astro.props;
 
 <Section text="Featured Projects" href="projects">
   {
-    projects.map((project, index) => (
+    projects.map((project) => (
       <article class="mb-12 overflow-hidden rounded-3xl border border-white/10 bg-[#151d27] shadow-2xl shadow-black/20">
         <details class="group/project">
-          <summary class="grid cursor-pointer list-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary lg:grid-cols-[1.05fr_0.95fr] [&::-webkit-details-marker]:hidden">
+          <summary
+            class="grid cursor-pointer list-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary lg:grid-cols-[1.05fr_0.95fr] [&::-webkit-details-marker]:hidden"
+            data-analytics-event="project_open"
+            data-analytics-project={project.name}
+          >
             <div class="aspect-video overflow-hidden bg-[#0a1017] lg:aspect-auto lg:min-h-80">
               <Image
                 class="h-full w-full object-cover object-top transition duration-500 group-hover/project:scale-[1.01]"
@@ -31,8 +35,8 @@ const { projects } = Astro.props;
                 <span class="rounded-full bg-primary/15 px-3 py-1.5 text-primary">
                   {project.projectType}
                 </span>
-                {index === 0 && (
-                  <span class="text-emerald-300">Flagship case study</span>
+                {project.featured && (
+                  <span class="text-emerald-300">Featured project</span>
                 )}
               </div>
 
@@ -159,6 +163,9 @@ const { projects } = Astro.props;
                     href={project.linkPreview}
                     target="_blank"
                     rel="noopener noreferrer"
+                    data-analytics-event="project_click"
+                    data-analytics-project={project.name}
+                    data-analytics-destination="live"
                     class="rounded-sm hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
                   >
                     View live project <span aria-hidden="true">↗</span>
@@ -169,6 +176,9 @@ const { projects } = Astro.props;
                     href={project.linkSource}
                     target="_blank"
                     rel="noopener noreferrer"
+                    data-analytics-event="project_click"
+                    data-analytics-project={project.name}
+                    data-analytics-destination="source"
                     class="rounded-sm hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
                   >
                     View source <span aria-hidden="true">↗</span>

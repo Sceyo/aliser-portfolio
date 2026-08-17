@@ -1,35 +1,58 @@
-# AstroZen - Personal Portfolio Website
+# Francis Aliser — Portfolio
 
-AstroZen is a minimalist, accessible and responsive portfolio template for your personal portfolio website. It is built with Astro and TailwindCSS.
+Personal portfolio for Francis Aliser, a Cebu-based full-stack developer and software engineer. The site highlights production-oriented work in retail operations, payment integrations, automation, cloud databases, and real-time applications.
 
-![zen-og](https://github.com/user-attachments/assets/7a72aaae-6652-4cd0-becc-8e6a3c224993)
+## Highlights
 
-> [!NOTE]
-> The information contained in this template, including names, images, and content, is entirely fictitious and is intended solely to give the design a realistic appearance. Any coincidence with real-life people, events, or situations is purely coincidental. It is recommended that you replace this information with your own information.
+- Detailed project case studies with responsibilities, results, technology stacks, and galleries
+- Work experience, technical skills, certifications, and downloadable résumé
+- Responsive, accessible, and static-first interface
+- Search and social metadata, JSON-LD structured data, sitemap, and robots configuration
+- Privacy-conscious Vercel Web Analytics with résumé and project interaction events
 
-## 🔥 Features
+## Tech stack
 
-- [x] Minimalist design. clean and simple
-- [x] Mobile-first responsive layout
-- [x] SEO-friendly and accessible
-- [x] Easy to customize with a single configuration file
+- [Astro](https://astro.build/) 6
+- [Tailwind CSS](https://tailwindcss.com/) 4
+- TypeScript
+- Vercel Web Analytics
+- Astro Sitemap
 
-## ✅ Lighthouse Score
+## Local setup
 
-![performance](https://github.com/user-attachments/assets/4f95e2ca-03f9-4996-9e34-dcd179194c58)
+### Prerequisites
 
-## 🚀 Getting Started
+- Node.js 22 or later
+- pnpm 10.18.2 or a compatible pnpm 10 release
 
-Clone this repository to your local machine using Git.
+### Install and run
 
-```scheme
-git clone https://github.com/immois/astro-zen.git
-cd astro-zen
+```bash
+git clone https://github.com/Sceyo/aliser-portfolio.git
+cd aliser-portfolio
+pnpm install
+pnpm dev
 ```
 
-| Command        | Action                                       |
-| :------------- | :------------------------------------------- |
-| `pnpm install` | Installs dependencies                        |
-| `pnpm dev`     | Starts local dev server at `localhost:4321`  |
-| `pnpm build`   | Build your production site to `./dist/`      |
-| `pnpm preview` | Preview your build locally, before deploying |
+The development server runs at `http://localhost:4321` by default.
+
+## Commands
+
+| Command        | Purpose                                             |
+| -------------- | --------------------------------------------------- |
+| `pnpm dev`     | Start the local development server                  |
+| `pnpm build`   | Type-check and create a production build in `dist/` |
+| `pnpm preview` | Preview the production build locally                |
+| `pnpm astro`   | Run Astro CLI commands                              |
+
+## Content and configuration
+
+Portfolio content and site metadata are maintained in `src/config/index.ts`. Reusable page sections live in `src/components`, while static assets such as the résumé, project screenshots, and social image live in `public`.
+
+## Analytics
+
+The site uses Vercel Web Analytics. After deployment, enable Web Analytics in the Vercel project dashboard. Page views are collected anonymously without cookies. Named interaction events are included for résumé downloads, project expansions, live-project visits, and source-code visits; custom-event availability depends on the Vercel plan.
+
+## License
+
+This project is available under the terms in [LICENSE](LICENSE).

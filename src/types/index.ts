@@ -68,6 +68,7 @@ export interface ExperienceProps {
 
 export interface ProjectProps {
   name: string;
+  featured?: boolean;
   projectType: string;
   summary: string;
   image: string;

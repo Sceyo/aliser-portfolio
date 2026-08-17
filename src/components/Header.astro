@@ -21,7 +21,7 @@ const { siteLogo, navLinks } = Astro.props;
       src={siteLogo}
       width="45"
       height="45"
-      alt="website logo"
+      alt="Francis Aliser home"
       priority
     />
   </a>
@@ -109,7 +109,12 @@ const { siteLogo, navLinks } = Astro.props;
         }
       });
     },
-    { threshold: 0.5 },
+    {
+      // Use a narrow activation band instead of a visibility percentage so
+      // sections taller than the viewport can still become active.
+      rootMargin: "-20% 0px -70% 0px",
+      threshold: 0,
+    },
   );
 
   document.querySelectorAll("section").forEach((section) => {
