@@ -9,53 +9,57 @@ const { siteLogo, navLinks } = Astro.props;
 ---
 
 <header
-  class="sticky top-0 z-50 mx-auto flex max-w-5xl animate-slide-in justify-between bg-black px-5 py-6"
+  class="sticky top-0 z-50 w-full animate-slide-in border-b border-white/5 bg-black/90 backdrop-blur-xl"
 >
-  <a
-    href="/"
-    aria-label="Go to home page"
-    class="rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+  <div
+    class="relative mx-auto flex max-w-5xl items-center justify-between px-5 py-6"
   >
-    <Image
-      class="rounded-full"
-      src={siteLogo}
-      width="45"
-      height="45"
-      alt="Francis Aliser home"
-      priority
-    />
-  </a>
+    <a
+      href="/"
+      aria-label="Go to home page"
+      class="rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+    >
+      <Image
+        class="rounded-full"
+        src={siteLogo}
+        width="45"
+        height="45"
+        alt="Francis Aliser home"
+        priority
+      />
+    </a>
 
-  <button
-    type="button"
-    id="menu-button"
-    class="rounded-sm px-1.5 text-neutral focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:hidden"
-    aria-expanded="false"
-    aria-controls="main-menu"
-    aria-label="Open navigation menu"
-  >
-    <Menu />
-  </button>
+    <button
+      type="button"
+      id="menu-button"
+      class="rounded-sm px-1.5 text-neutral focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:hidden"
+      aria-expanded="false"
+      aria-controls="main-menu"
+      aria-label="Open navigation menu"
+    >
+      <Menu />
+    </button>
 
-  <nav
-    class="absolute top-20 right-5 hidden rounded-xl border border-neutral/40 bg-black px-4 py-5 text-neutral sm:static sm:block sm:border-0 sm:bg-transparent sm:p-0"
-    id="main-menu"
-  >
-    <ul class="gap-2 sm:flex">
-      {
-        navLinks.map((link) => (
-          <li class="relative">
-            <a
-              class={`nav-item relative block rounded-sm p-2 text-sm font-medium transition-all duration-500 after:absolute after:bottom-0 after:left-2/4 after:h-2 after:w-1 after:-translate-x-2/4 after:text-primary after:opacity-0 after:content-['•'] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary`}
-              href={link.href}
-            >
-              {link.text}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-  </nav>
+    <nav
+      class="absolute top-20 right-5 hidden rounded-xl border border-neutral/40 bg-black px-4 py-5 text-neutral sm:static sm:block sm:border-0 sm:bg-transparent sm:p-0"
+      id="main-menu"
+    >
+      <ul class="gap-2 sm:flex">
+        {
+          navLinks.map((link) => (
+            <li class="relative">
+              <a
+                class={`nav-item relative block rounded-sm p-2 text-sm font-medium transition-all duration-500 after:absolute after:bottom-0 after:left-2/4 after:h-2 after:w-1 after:-translate-x-2/4 after:text-primary after:opacity-0 after:content-['•'] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary`}
+                href={link.href}
+              >
+                {link.text}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
 </header>
 
 <script>

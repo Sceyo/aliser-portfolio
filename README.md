@@ -15,6 +15,7 @@ Personal portfolio for Francis Aliser, a Cebu-based full-stack developer and sof
 - [Astro](https://astro.build/) 6
 - [Tailwind CSS](https://tailwindcss.com/) 4
 - TypeScript
+- [Motion](https://motion.dev/) for progressive animation and interaction
 - Vercel Web Analytics
 - Astro Sitemap
 

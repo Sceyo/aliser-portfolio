@@ -14,9 +14,16 @@ const {
 } = Astro.props;
 ---
 
-<section class="py-20 md:py-28" id="hero">
+<section class="relative isolate py-20 md:py-28" id="hero">
+  <div class="hero-ambient" aria-hidden="true">
+    <span class="hero-orb hero-orb-primary"></span>
+    <span class="hero-orb hero-orb-secondary"></span>
+    <span class="hero-grid"></span>
+  </div>
+
   <div
     class="mb-8 flex flex-wrap items-center gap-3 text-xs font-semibold tracking-[0.16em] uppercase"
+    data-hero-reveal
   >
     <span
       class="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 text-emerald-300"
@@ -28,19 +35,26 @@ const {
     <span class="text-neutral">{location}</span>
   </div>
 
-  <p class="mb-4 font-serif text-xl font-semibold text-primary">
+  <p
+    class="mb-4 font-serif text-xl font-semibold text-primary"
+    data-hero-reveal
+  >
     {name} · {specialty}
   </p>
   <h1
     class="max-w-4xl font-serif text-5xl font-bold tracking-tightest text-white sm:text-6xl md:text-7xl"
+    data-hero-reveal
   >
     {headline}
   </h1>
-  <p class="mt-8 max-w-3xl text-base font-normal text-neutral md:text-lg">
+  <p
+    class="mt-8 max-w-3xl text-base font-normal text-neutral md:text-lg"
+    data-hero-reveal
+  >
     {summary}
   </p>
 
-  <div class="mt-10 flex flex-wrap gap-4">
+  <div class="mt-10 flex flex-wrap gap-4" data-hero-reveal>
     <a
       class="rounded-full bg-primary px-7 py-4 text-sm font-semibold text-white transition hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
       href="#projects">View featured work</a
@@ -58,3 +72,72 @@ const {
     >
   </div>
 </section>
+
+<style>
+  .hero-ambient {
+    position: absolute;
+    top: -7rem;
+    left: 50%;
+    z-index: -1;
+    width: 100vw;
+    height: 45rem;
+    transform: translateX(-50%);
+    overflow: hidden;
+    pointer-events: none;
+    mask-image: linear-gradient(to bottom, black 68%, transparent 100%);
+  }
+
+  .hero-orb {
+    position: absolute;
+    display: block;
+    border-radius: 9999px;
+    filter: blur(90px);
+    will-change: transform;
+  }
+
+  .hero-orb-primary {
+    top: 4rem;
+    left: 8%;
+    width: min(36rem, 68vw);
+    height: min(29rem, 58vw);
+    background: rgb(37 99 235 / 22%);
+    animation: ambient-drift-primary 16s ease-in-out infinite alternate;
+  }
+
+  .hero-orb-secondary {
+    top: 1rem;
+    right: 7%;
+    width: min(28rem, 55vw);
+    height: min(24rem, 48vw);
+    background: rgb(14 165 233 / 12%);
+    animation: ambient-drift-secondary 20s ease-in-out infinite alternate;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgb(148 163 184 / 4%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(148 163 184 / 4%) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(circle at 50% 25%, black, transparent 68%);
+  }
+
+  @keyframes ambient-drift-primary {
+    to {
+      transform: translate3d(7vw, 2rem, 0) scale(1.08);
+    }
+  }
+
+  @keyframes ambient-drift-secondary {
+    to {
+      transform: translate3d(-6vw, 3rem, 0) scale(0.94);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-orb {
+      animation: none;
+    }
+  }
+</style>
