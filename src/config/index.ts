@@ -243,6 +243,43 @@ export const SITE_CONTENT: SiteContent = {
       linkSource: "https://github.com/Sceyo/PadQ",
       image: "/project-images/Padq/homepage.jpg",
     },
+    {
+      name: "OpenDota Multi-Role Match Tracker & Alert Bot",
+      featured: true,
+      projectType: "Independent product · Automation / Data tooling",
+      summary:
+        "An automated Python/Playwright/Streamlit bot that monitors pro Dota 2 players on OpenDota, detects new matches, and sends real-time Discord alerts with match screenshots.",
+      role: "Founder & Developer",
+      status: "Weekend project · Working prototype",
+      contribution:
+        "Designed and implemented an automated match-tracking pipeline with headless browser scraping, fault-tolerant polling, and Discord webhook notifications.",
+      results: [
+        "Built headless browser automation with Playwright to scrape match history without violating target-site robots.txt.",
+        "Designed a 3-strike circuit breaker and atomic file writes to make polling resilient to transient failures.",
+        "Documented the system with a full architecture spec and 6 Architecture Decision Records (ADRs), including a pivot from Dotabuff to OpenDota after auditing scraping constraints.",
+      ],
+      technologies: [
+        "Python",
+        "Playwright",
+        "Streamlit",
+        "Discord API",
+        "JSON",
+      ],
+      gallery: [
+        {
+          src: "/project-images/DotaAlertBot/match-tracker.png",
+          alt: "OpenDota Multi-Role Match Tracker player monitoring dashboard",
+          caption: "Live player match monitoring and multi-role tracking interface",
+        },
+        {
+          src: "/project-images/DotaAlertBot/meta-report.png",
+          alt: "OpenDota Daily Meta Report hero leaderboard view",
+          caption: "Top 10 hero meta leaderboard and category configuration",
+        },
+      ],
+      linkSource: "https://github.com/Sceyo/DotaAlertBot",
+      image: "/project-images/DotaAlertBot/match-tracker.png",
+    },
   ],
   skillsAndCertifications: {
     skillCategories: {
@@ -259,6 +296,16 @@ export const SITE_CONTENT: SiteContent = {
       ],
     },
     certifications: [
+      {
+        name: "Google AI Professional Certificate",
+        issuer: "Coursera / Google",
+        date: "Sep 2026",
+        featured: true,
+        credentialUrl:
+          "https://coursera.org/verify/professional-cert/1H2EBK7OQ53X",
+        description:
+          "Covers 8 courses spanning AI for brainstorming, research, writing, content creation, data analysis, app building, and deployment.",
+      },
       {
         name: "Google IT Automation with Python",
         issuer: "Coursera / Google",
