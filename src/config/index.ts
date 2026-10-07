@@ -6,7 +6,7 @@ export const SITE_CONFIG: SiteConfig = {
   description:
     "Cebu-based full-stack developer and software engineer building dependable web systems for retail operations, automation, and real-time experiences.",
   lang: "en",
-  siteLogo: "/francis-grad-small.png",
+  siteLogo: "/Formal Photo.jpg",
   navLinks: [
     { text: "Projects", href: "#projects" },
     { text: "Experience", href: "#experience" },
@@ -352,6 +352,6 @@ export const SITE_CONTENT: SiteContent = {
   about: {
     description:
       "I’m Francis Aliser, a Cebu-based full-stack developer and software engineer who graduated with a BS in Information Technology from the University of San Carlos on July 3, 2026. I was an Academic & Financial Scholar under the Redemptorist Educational Assistance Program from 2020 to 2026. I enjoy building practical systems that connect clean interfaces with reliable backend services. My experience spans retail platforms, workflow automation, real-time applications, cloud databases, and enterprise IT operations.",
-    image: "/francis-grad-big.jpg",
+    image: "/Formal Photo Big.jpg",
   },
 };
