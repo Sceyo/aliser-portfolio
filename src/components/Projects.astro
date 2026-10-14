@@ -161,6 +161,17 @@ const { projects } = Astro.props;
               </ul>
 
               <div class="mt-8 flex flex-wrap gap-5 text-sm font-semibold text-white">
+                {project.caseStudyUrl && (
+                  <a
+                    href={project.caseStudyUrl}
+                    data-analytics-event="project_click"
+                    data-analytics-project={project.name}
+                    data-analytics-destination="case_study"
+                    class="rounded-sm text-primary hover:text-primary/80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+                  >
+                    Read case study <span aria-hidden="true">→</span>
+                  </a>
+                )}
                 {project.linkPreview && (
                   <a
                     href={project.linkPreview}

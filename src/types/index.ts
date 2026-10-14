@@ -84,6 +84,7 @@ export interface ProjectProps {
   }[];
   linkPreview?: string;
   linkSource?: string;
+  caseStudyUrl?: string;
 }
 
 export interface AboutProps {
