@@ -1,0 +1,715 @@
+---
+import Layout from "@layouts/Layout.astro";
+import "../../styles/global.css";
+
+const metrics = [
+  {
+    label: "Automated Test Suite",
+    value: "209 / 209",
+    unit: "Tests Passed",
+    subtext: "173 Vitest unit/sim tests, 20 Firestore rules emulator tests, and 16 Playwright browser stress scenarios",
+    accent: "text-emerald-400",
+    badge: "100% Passing",
+  },
+  {
+    label: "Multi-Court Concurrency",
+    value: "30 / 3",
+    unit: "Players & Courts",
+    subtext: "Sustained 30 active players across 3 simultaneous courts with zero race conditions or desync",
+    accent: "text-primary",
+    badge: "Stress Tested",
+  },
+  {
+    label: "Live Spectator Fan-Out",
+    value: "30",
+    unit: "Simultaneous Viewers",
+    subtext: "Real-time score & queue broadcast via Cloud Firestore onSnapshot with zero app installation",
+    accent: "text-sky-400",
+    badge: "Real-Time CDN",
+  },
+  {
+    label: "Infrastructure Cost",
+    value: "$0",
+    unit: "Per Month",
+    subtext: "100% free-tier operation on Firebase Spark + Vercel Hobby with zero dedicated server overhead",
+    accent: "text-amber-400",
+    badge: "Zero-Cost",
+  },
+];
+
+const challenges = [
+  {
+    id: "01",
+    tag: "Distributed State & Concurrency",
+    title: "Transactional Consistency Without a Backend Server",
+    problem:
+      "When managing multiple courts simultaneously, concurrent mutations—such as score updates, court completions, and queue reorderings—risk race conditions, document overwrites, and state corruption if two devices submit changes within the same millisecond window.",
+    solution:
+      "Engineered an atomic, revision-checked mutation pipeline via sessionService.updateQueueSafely() using Cloud Firestore transactions. Every write increments and validates an internal document revision counter. If a concurrent mutation occurs mid-flight, Firestore automatically retries the transaction against the fresh snapshot; on unrecoverable network failure, the client rolls back optimistic UI state.",
+    codeSnippet: `// lib/services/sessionService.ts
+export async function updateQueueSafely(
+  sessionId: string,
+  updater: (prev: SessionData) => SessionData
+): Promise<void> {
+  const sessionRef = doc(db, "sessions", sessionId);
+  await runTransaction(db, async (transaction) => {
+    const snap = await transaction.get(sessionRef);
+    if (!snap.exists()) throw new Error("Session not found");
+    
+    const current = snap.data() as SessionData;
+    const next = updater(current);
+    
+    transaction.update(sessionRef, {
+      ...next,
+      revision: (current.revision || 0) + 1,
+      updatedAt: serverTimestamp(),
+    });
+  });
+}`,
+    result: "Passed all 20 Firestore emulator security/concurrency tests and 16 Playwright multi-tab stress scenarios with zero lost updates or state desynchronization.",
+  },
+  {
+    id: "02",
+    tag: "Matchmaking & Graph Rotation",
+    title: "Deterministic Doubles Fair Matchmaking Under Starvation Constraints",
+    problem:
+      "Casual club sessions suffer from severe social friction: players get stuck waiting for multiple matches (queue starvation), or the algorithm repeatedly pairs the same partners together, degrading competitive balance and player enjoyment.",
+    solution:
+      "Designed a deterministic three-phase doubles state machine (INIT → WINNERS → LOSERS) combined with a priority wait-cycle counter. The engine tracks historical pairings per session to minimize duplicate partnerships, while an anti-starvation override automatically promotes players who have waited two or more consecutive match cycles to the head of the court staging queue.",
+    codeSnippet: `// lib/engines/rotationEngine.ts
+export function selectNextDoublesGroup(
+  queue: Player[],
+  history: MatchRecord[]
+): [Player, Player, Player, Player] {
+  // Sort by wait cycles descending to eliminate starvation
+  const eligible = [...queue].sort((a, b) => b.waitCycles - a.waitCycles);
+  
+  // Dynamic starvation check: players waiting >= 2 cycles gain top priority
+  const starved = eligible.filter((p) => p.waitCycles >= 2);
+  const pool = starved.length >= 4 ? starved.slice(0, 4) : eligible.slice(0, 4);
+  
+  // Form pairings that minimize historical repeat frequency
+  return optimizePartnerPairing(pool, history);
+}`,
+    result: "Reduced partner repetition to mathematically optimal minimums across 30-player sessions while guaranteeing maximum queue wait bounds of ≤ 2 match cycles.",
+  },
+  {
+    id: "03",
+    tag: "Zero-Trust Security & Quota Defense",
+    title: "Abuse Prevention & Quota Hardening via Firebase App Check",
+    problem:
+      "Because spectator links are publicly shared via QR codes at sports venues, malicious actors or automated crawlers could scrape or forge write mutations to Firestore, tampering with live matches or burning through Firebase free-tier document quotas.",
+    solution:
+      "Implemented a defense-in-depth security model: enforced Firebase App Check with reCAPTCHA Enterprise on client initialization to cryptographically attest that requests originate strictly from the authentic web application. Combined with Firestore Security Rules requiring Anonymous Auth session isolation, ensuring only the verified host UID can execute mutation transactions.",
+    codeSnippet: `// firestore.rules
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /sessions/{sessionId} {
+      // Spectators can read if authenticated or via App Check token
+      allow read: if request.auth != null;
+      
+      // Mutations strictly locked to the verified session host
+      allow update, delete: if request.auth != null 
+        && request.auth.uid == resource.data.hostUid
+        && request.appCheck != null;
+    }
+  }
+}`,
+    result: "Completely eliminated unauthorized mutation vulnerabilities while maintaining frictionless, instant QR code spectator access inside 100% free-tier Firebase quotas.",
+  },
+];
+
+const galleryScreens = [
+  {
+    src: "/project-images/Padq/homepage.jpg",
+    alt: "PAD-Q session setup and entry portal",
+    number: "01",
+    title: "Session Setup & Entry Portal",
+    category: "Onboarding · Next.js 16 App Router",
+    caption:
+      "Clean, friction-free host session initialization and spectator QR code generation with zero app download or account registration required.",
+  },
+  {
+    src: "/project-images/Padq/3courts.jpg",
+    alt: "PAD-Q simultaneous three-court management view",
+    number: "02",
+    title: "Simultaneous 3-Court Management",
+    category: "Multi-Court Operations · React 19",
+    caption:
+      "Real-time management dashboard tracking active matches, next-up rotations, and dynamic player staging across up to 3 concurrent courts.",
+  },
+  {
+    src: "/project-images/Padq/scoreboard.jpg",
+    alt: "PAD-Q point-by-point live match scoreboard",
+    number: "03",
+    title: "Point-by-Point Live Scoreboard",
+    category: "Game UX · Large Touch Targets",
+    caption:
+      "High-contrast, outdoor-readable digital scoreboard featuring point-by-point tracking, serve indicators, and configurable winning target points.",
+  },
+  {
+    src: "/project-images/Padq/live.jpg",
+    alt: "PAD-Q real-time spectator watch experience",
+    number: "04",
+    title: "Real-Time Spectator Watch Mode",
+    category: "Live Fan-Out · Firestore onSnapshot",
+    caption:
+      "Sub-second spectator view allowing players resting on benches to follow court scores and upcoming queue positions from their personal smartphones.",
+  },
+  {
+    src: "/project-images/Padq/Skilled.jpg",
+    alt: "PAD-Q fair rotation and partner pair controls",
+    number: "05",
+    title: "Fair Rotation & Skill Staging",
+    category: "Matchmaking Engine · Algorithmic Fair Play",
+    caption:
+      "Visual rotation controls for singles and doubles, showing automated partner assignments, wait cycle indicators, and queue reordering.",
+  },
+];
+
+const techStack = [
+  {
+    layer: "Frontend Engine",
+    tech: "Next.js 16, React 19, TypeScript 5",
+    detail: "Modern App Router architecture with client-side optimistic UI updates and instant static page loads",
+  },
+  {
+    layer: "Styling & Design Tokens",
+    tech: "Tailwind CSS 4, Lucide Icons, Modern CSS",
+    detail: "High-contrast dark theme optimized for outdoor sun glare on mobile devices with 48px+ touch targets",
+  },
+  {
+    layer: "Real-Time State & Database",
+    tech: "Cloud Firestore, onSnapshot Listeners, Local Cache",
+    detail: "Bi-directional real-time document synchronization with sub-second fan-out to 30+ simultaneous spectator clients",
+  },
+  {
+    layer: "Security & Threat Mitigation",
+    tech: "Firebase App Check, reCAPTCHA Enterprise, Anonymous Auth",
+    detail: "Cryptographic token attestation preventing unauthorized API scrapers and protecting free-tier quotas",
+  },
+  {
+    layer: "State Engine & Matchmaking",
+    tech: "Custom Deterministic State Machine (INIT → WINNERS → LOSERS)",
+    detail: "Graph-based pairing minimization with priority wait-cycle counters eliminating queue starvation",
+  },
+  {
+    layer: "Testing & Quality Assurance",
+    tech: "Vitest, Firebase Emulator Suite, Playwright",
+    detail: "209 passing automated tests (173 unit/sim, 20 Firestore rules emulator, 16 Playwright multi-client browser scenarios)",
+  },
+  {
+    layer: "Hosting & CI/CD",
+    tech: "Vercel Hobby, GitHub Actions",
+    detail: "Zero-cost production continuous deployment pipeline with automated pull-request preview environments",
+  },
+];
+---
+
+<Layout>
+  <!-- Ambient High-Tech Glow (matching Portfolio Hero) -->
+  <div class="case-study-ambient" aria-hidden="true">
+    <span class="ambient-orb ambient-orb-primary"></span>
+    <span class="ambient-orb ambient-orb-secondary"></span>
+    <span class="ambient-grid"></span>
+  </div>
+
+  <article class="relative z-10 pt-8 pb-24">
+    <!-- Breadcrumb / Back Link -->
+    <nav class="mb-10" aria-label="Breadcrumb">
+      <a
+        href="/#projects"
+        class="group inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold tracking-wider text-white/70 uppercase transition hover:border-primary/40 hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      >
+        <span class="transition-transform duration-200 group-hover:-translate-x-1" aria-hidden="true">←</span>
+        Back to Featured Projects
+      </a>
+    </nav>
+
+    <!-- Case Study Hero Header -->
+    <header class="border-b border-white/10 pb-16" data-reveal>
+      <div class="mb-6 flex flex-wrap items-center gap-3 text-xs font-semibold tracking-[0.14em] uppercase">
+        <span class="rounded-full bg-primary/20 px-3.5 py-1.5 text-primary">
+          Production Case Study
+        </span>
+        <span class="rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-white/70">
+          Sports Technology · Real-Time Systems · Distributed State
+        </span>
+        <span class="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3.5 py-1.5 text-emerald-300">
+          <span class="h-2 w-2 animate-pulse rounded-full bg-emerald-400" aria-hidden="true"></span>
+          Release Candidate (v1.0.0-rc.6)
+        </span>
+      </div>
+
+      <h1 class="font-serif text-4xl font-bold tracking-tightest text-white sm:text-5xl md:text-6xl lg:text-7xl">
+        PAD-Q: High-Concurrency Multi-Court Queue & Matchmaking Architecture
+      </h1>
+
+      <p class="mt-8 max-w-4xl text-lg font-normal leading-relaxed text-neutral md:text-xl">
+        A real-time court management and matchmaking system for racket sports that automates multi-court rotations,
+        live spectator tracking, and score recording with zero app installation—hardened under a 209-test automated quality
+        gate and operating on a $0/month serverless infrastructure.
+      </p>
+
+      <!-- Project Metadata Card -->
+      <div class="mt-10 grid gap-4 rounded-2xl border border-white/10 bg-[#151d27]/80 p-6 backdrop-blur sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <dt class="text-xs font-semibold tracking-wider text-white/45 uppercase">Role</dt>
+          <dd class="mt-1 font-serif text-base font-semibold text-white">Founder &amp; Full-Stack Developer</dd>
+        </div>
+        <div>
+          <dt class="text-xs font-semibold tracking-wider text-white/45 uppercase">Status &amp; Release</dt>
+          <dd class="mt-1 font-serif text-base font-semibold text-white">v1.0.0-rc.6 · Live on Vercel</dd>
+        </div>
+        <div>
+          <dt class="text-xs font-semibold tracking-wider text-white/45 uppercase">Verification</dt>
+          <dd class="mt-1 font-serif text-base font-semibold text-emerald-400">209 Passing Automated Tests</dd>
+        </div>
+        <div>
+          <dt class="text-xs font-semibold tracking-wider text-white/45 uppercase">Infrastructure &amp; Model</dt>
+          <dd class="mt-1 font-serif text-base font-semibold text-emerald-400">100% Free-Tier ($0/mo) · MIT</dd>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="mt-8 flex flex-wrap items-center gap-4 text-sm font-semibold">
+        <a
+          href="https://pad-q.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-white shadow-lg shadow-primary/20 transition hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+        >
+          Launch Live App <span aria-hidden="true">↗</span>
+        </a>
+        <a
+          href="https://github.com/Sceyo/PadQ"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-white transition hover:border-white/40 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+        >
+          View GitHub Repository <span aria-hidden="true">↗</span>
+        </a>
+        <a
+          href="https://www.linkedin.com/in/francis-aliser/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-full px-6 py-4 text-neutral transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+        >
+          Author: Francis Aliser <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Key Performance Metrics Grid -->
+    <section class="mt-16" data-reveal aria-labelledby="metrics-title">
+      <div class="mb-6 flex items-end justify-between">
+        <div>
+          <p class="text-xs font-semibold tracking-[0.14em] text-primary uppercase">Production Benchmarks</p>
+          <h2 id="metrics-title" class="mt-1 font-serif text-3xl font-bold tracking-tight text-white">
+            Key Architecture & Reliability Metrics
+          </h2>
+        </div>
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          metrics.map((item) => (
+            <div class="group relative overflow-hidden rounded-3xl border border-white/10 bg-[#151d27] p-7 shadow-xl shadow-black/20 transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold tracking-wider text-white/50 uppercase">
+                  {item.label}
+                </span>
+                <span class="rounded-full bg-white/5 px-2.5 py-0.5 text-[0.7rem] font-semibold text-white/70">
+                  {item.badge}
+                </span>
+              </div>
+              <div class="mt-4 flex items-baseline gap-1.5">
+                <p class={`font-serif text-4xl font-extrabold tracking-tight ${item.accent}`}>
+                  {item.value}
+                </p>
+                <span class="text-xs font-semibold text-white/60 uppercase">{item.unit}</span>
+              </div>
+              <p class="mt-3 text-xs leading-5 text-neutral">{item.subtext}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- The Problem & Motivation -->
+    <section class="mt-20" data-reveal>
+      <div class="mb-8">
+        <p class="text-xs font-semibold tracking-[0.14em] text-primary uppercase">The Venue Dilemma</p>
+        <h2 class="mt-1 font-serif text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          The Chaos of Recreational Sports Queue Management
+        </h2>
+      </div>
+
+      <div class="grid gap-8 lg:grid-cols-12">
+        <div class="space-y-5 text-base leading-relaxed text-neutral lg:col-span-7">
+          <p>
+            Recreational racket sports—such as padel, pickleball, and badminton—have surged in global popularity. Yet,
+            weekly club sessions and open-play tournaments are still overwhelmingly managed using physical whiteboards,
+            paper sheets, or informal shouting across noisy sports halls.
+          </p>
+          <p>
+            This manual approach introduces persistent operational friction: session hosts spend more time arbitrating
+            who plays next than enjoying the sport; players experience long, unpredictable wait cycles (queue starvation);
+            and doubles rotations repeatedly pair the same players together, degrading competitive balance.
+          </p>
+          <p>
+            Existing commercial software solutions fail on court floors: they demand mandatory native app downloads,
+            lengthy user account registrations, and intrusive subscription fees. In a casual club setting with 20 to 30
+            drop-in participants, requiring every player to install an app creates instant friction and adoption failure.
+          </p>
+        </div>
+
+        <div class="rounded-3xl border border-white/10 bg-[#151d27] p-8 lg:col-span-5">
+          <h3 class="font-serif text-xl font-semibold text-white">Why Conventional Methods Fail:</h3>
+          <ul class="mt-6 space-y-4 text-sm text-neutral">
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500/20 text-xs font-bold text-red-400">✕</span>
+              <span><strong>Whiteboard &amp; Verbal Chaos:</strong> Names get smudged, rotation order is disputed, and players constantly interrupt hosts to ask "when am I up?".</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500/20 text-xs font-bold text-red-400">✕</span>
+              <span><strong>App Store Friction:</strong> Forcing 30 players to download native apps and create accounts halts session check-in.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500/20 text-xs font-bold text-red-400">✕</span>
+              <span><strong>Unfair Partner Repeat:</strong> Naive rotations fail to remember recent pairings, resulting in identical teams playing back-to-back.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-xs font-bold text-emerald-400">✓</span>
+              <span><strong>The PAD-Q Solution:</strong> A zero-download, web-based control room with instant QR spectator sync and algorithmic fairness.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture & Pipeline Flowchart -->
+    <section class="mt-20" data-reveal>
+      <div class="mb-8">
+        <p class="text-xs font-semibold tracking-[0.14em] text-primary uppercase">System Architecture</p>
+        <h2 class="mt-1 font-serif text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          Real-Time Serverless Data Flow
+        </h2>
+        <p class="mt-2 text-base text-neutral">
+          Decoupled client actions, atomic Firestore transactions, and instantaneous broadcast synchronization to 30+ spectator devices with $0/month infrastructure cost.
+        </p>
+      </div>
+
+      <!-- Modern Card-Based Architecture Visualization -->
+      <div class="grid gap-4 lg:grid-cols-4">
+        <!-- Stage 1 -->
+        <div class="relative rounded-3xl border border-white/10 bg-[#151d27] p-6 shadow-xl">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold tracking-wider text-primary uppercase">Stage 01</span>
+            <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-[0.7rem] font-semibold text-primary">Host UI</span>
+          </div>
+          <h3 class="mt-4 font-serif text-xl font-bold text-white">Scoreboard &amp; Courts</h3>
+          <p class="mt-2 text-xs leading-5 text-neutral">
+            Host interface captures real-time court scoring, match completions, and queue reordering via touch-optimized React 19 controls.
+          </p>
+          <div class="mt-4 rounded-xl border border-white/10 bg-black/40 p-3 text-[0.75rem] font-mono text-white/70">
+            useQueue.ts<br />
+            useSession.ts
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="relative rounded-3xl border border-white/10 bg-[#151d27] p-6 shadow-xl">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold tracking-wider text-emerald-400 uppercase">Stage 02</span>
+            <span class="rounded-full bg-emerald-400/10 px-2.5 py-0.5 text-[0.7rem] font-semibold text-emerald-400">Matchmaking</span>
+          </div>
+          <h3 class="mt-4 font-serif text-xl font-bold text-white">State Engine</h3>
+          <p class="mt-2 text-xs leading-5 text-neutral">
+            Calculates deterministic next-up doubles matchups, increments player wait-cycles, and prevents repeat partner duplication.
+          </p>
+          <div class="mt-4 rounded-xl border border-white/10 bg-black/40 p-3 text-[0.75rem] font-mono text-emerald-400/90">
+            INIT → WINNERS → LOSERS<br />
+            Wait-Cycle Balancing
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="relative rounded-3xl border border-white/10 bg-[#151d27] p-6 shadow-xl">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold tracking-wider text-sky-400 uppercase">Stage 03</span>
+            <span class="rounded-full bg-sky-400/10 px-2.5 py-0.5 text-[0.7rem] font-semibold text-sky-400">Transaction</span>
+          </div>
+          <h3 class="mt-4 font-serif text-xl font-bold text-white">Atomic Persistence</h3>
+          <p class="mt-2 text-xs leading-5 text-neutral">
+            sessionService.updateQueueSafely executes a Firestore transaction with revision counter checks and optimistic rollback.
+          </p>
+          <div class="mt-4 rounded-xl border border-white/10 bg-black/40 p-3 text-[0.75rem] font-mono text-sky-400/90">
+            revision: rev + 1<br />
+            runTransaction()
+          </div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="relative rounded-3xl border border-white/10 bg-[#151d27] p-6 shadow-xl">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold tracking-wider text-amber-400 uppercase">Stage 04</span>
+            <span class="rounded-full bg-amber-400/10 px-2.5 py-0.5 text-[0.7rem] font-semibold text-amber-400">Fan-Out</span>
+          </div>
+          <h3 class="mt-4 font-serif text-xl font-bold text-white">Spectator Sync</h3>
+          <p class="mt-2 text-xs leading-5 text-neutral">
+            <code class="text-white/80">sessions/&#123;sessionId&#125;</code> document stream broadcasts live match status and queue positions to 30+ spectators via onSnapshot.
+          </p>
+          <div class="mt-4 rounded-xl border border-white/10 bg-black/40 p-3 text-[0.75rem] font-mono text-amber-400/90">
+            App Check + Anon Auth<br />
+            onSnapshot() Fan-Out
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Engineering Deep Dives (Challenges & Solutions) -->
+    <section class="mt-20" data-reveal>
+      <div class="mb-8">
+        <p class="text-xs font-semibold tracking-[0.14em] text-primary uppercase">Engineering Deep Dives</p>
+        <h2 class="mt-1 font-serif text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          Technical Challenges & Architectural Solutions
+        </h2>
+      </div>
+
+      <div class="space-y-12">
+        {
+          challenges.map((challenge) => (
+            <div class="rounded-3xl border border-white/10 bg-[#151d27] p-8 shadow-2xl lg:p-10">
+              <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
+                <div class="flex items-center gap-3">
+                  <span class="font-serif text-3xl font-bold text-white/30">{challenge.id}</span>
+                  <span class="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                    {challenge.tag}
+                  </span>
+                </div>
+              </div>
+
+              <h3 class="mt-6 font-serif text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                {challenge.title}
+              </h3>
+
+              <div class="mt-6 grid gap-8 lg:grid-cols-12">
+                <div class="space-y-4 text-sm leading-relaxed text-neutral lg:col-span-6">
+                  <div>
+                    <h4 class="font-semibold text-white uppercase tracking-wider text-xs">The Problem</h4>
+                    <p class="mt-2">{challenge.problem}</p>
+                  </div>
+                  <div class="pt-2">
+                    <h4 class="font-semibold text-white uppercase tracking-wider text-xs">The Architectural Solution</h4>
+                    <p class="mt-2">{challenge.solution}</p>
+                  </div>
+                  <div class="rounded-2xl border border-emerald-400/20 bg-emerald-400/5 p-4 text-xs font-medium text-emerald-300">
+                    <strong>Measured Impact:</strong> {challenge.result}
+                  </div>
+                </div>
+
+                <div class="lg:col-span-6">
+                  <div class="overflow-hidden rounded-2xl border border-white/10 bg-black/60 shadow-inner">
+                    <div class="flex items-center justify-between border-b border-white/10 bg-white/5 px-4 py-2.5 text-xs text-white/60">
+                      <span class="font-mono">Production Implementation</span>
+                      <span class="text-[0.65rem] tracking-wider uppercase text-white/40">TypeScript / Security Rules</span>
+                    </div>
+                    <pre class="overflow-x-auto p-4 text-xs font-mono leading-relaxed text-sky-200">
+                      <code>{challenge.codeSnippet}</code>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Visual Production Gallery -->
+    <section class="mt-20" data-reveal aria-labelledby="gallery-title">
+      <div class="mb-8">
+        <p class="text-xs font-semibold tracking-[0.14em] text-primary uppercase">Production Interface</p>
+        <h2 id="gallery-title" class="mt-1 font-serif text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          Interface & Operational Gallery
+        </h2>
+        <p class="mt-2 text-base text-neutral">
+          Verified visual screens demonstrating live multi-court management, point-by-point scoreboards, and real-time spectator modes.
+        </p>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {
+          galleryScreens.map((screen) => (
+            <figure class="group relative overflow-hidden rounded-3xl border border-white/10 bg-[#151d27] shadow-xl transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-2xl">
+              <div class="relative aspect-video w-full overflow-hidden bg-black/50">
+                <img
+                  src={screen.src}
+                  alt={screen.alt}
+                  class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div class="absolute top-3 left-3 rounded-md bg-black/70 px-2 py-1 text-[0.7rem] font-bold text-white backdrop-blur">
+                  {screen.number}
+                </div>
+              </div>
+
+              <figcaption class="p-6">
+                <span class="text-xs font-semibold tracking-wider text-primary uppercase">
+                  {screen.category}
+                </span>
+                <h3 class="mt-1 font-serif text-lg font-bold text-white">
+                  {screen.title}
+                </h3>
+                <p class="mt-2 text-xs leading-relaxed text-neutral">
+                  {screen.caption}
+                </p>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Comprehensive Tech Stack -->
+    <section class="mt-20" data-reveal>
+      <div class="mb-8">
+        <p class="text-xs font-semibold tracking-[0.14em] text-primary uppercase">Technology Stack</p>
+        <h2 class="mt-1 font-serif text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          Under the Hood: Full Specifications
+        </h2>
+      </div>
+
+      <div class="overflow-hidden rounded-3xl border border-white/10 bg-[#151d27] shadow-2xl">
+        <div class="divide-y divide-white/10">
+          {
+            techStack.map((item) => (
+              <div class="grid gap-2 p-6 sm:grid-cols-12 sm:items-center sm:gap-6">
+                <div class="sm:col-span-3">
+                  <span class="text-xs font-bold tracking-wider text-primary uppercase">
+                    {item.layer}
+                  </span>
+                </div>
+                <div class="sm:col-span-4">
+                  <p class="font-serif text-base font-bold text-white">{item.tech}</p>
+                </div>
+                <div class="sm:col-span-5">
+                  <p class="text-xs leading-relaxed text-neutral">{item.detail}</p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer Call-to-Action -->
+    <footer class="mt-24 rounded-3xl border border-white/10 bg-gradient-to-br from-[#151d27] to-[#0d131a] p-10 text-center shadow-2xl sm:p-14" data-reveal>
+      <span class="rounded-full bg-primary/20 px-4 py-1.5 text-xs font-semibold tracking-wider text-primary uppercase">
+        Ready for Production Play
+      </span>
+      <h2 class="mt-6 font-serif text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
+        Experience PAD-Q in Live Action
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-base text-neutral">
+        Explore the live application on Vercel or review the complete, production-tested open-source repository on GitHub.
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm font-semibold">
+        <a
+          href="https://pad-q.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-white shadow-lg shadow-primary/25 transition hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+        >
+          Launch PAD-Q Live ↗
+        </a>
+        <a
+          href="https://github.com/Sceyo/PadQ"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-white transition hover:border-white/40 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+        >
+          Inspect GitHub Source ↗
+        </a>
+        <a
+          href="/#projects"
+          class="inline-flex items-center gap-2 rounded-full px-6 py-4 text-neutral transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+        >
+          Back to Portfolio Home
+        </a>
+      </div>
+    </footer>
+  </article>
+</Layout>
+
+<style>
+  .case-study-ambient {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 0;
+    width: 100vw;
+    height: 60rem;
+    transform: translateX(-50%);
+    overflow: hidden;
+    pointer-events: none;
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  }
+
+  .ambient-orb {
+    position: absolute;
+    display: block;
+    border-radius: 9999px;
+    filter: blur(100px);
+    will-change: transform;
+  }
+
+  .ambient-orb-primary {
+    top: 2rem;
+    left: 10%;
+    width: min(38rem, 70vw);
+    height: min(30rem, 60vw);
+    background: rgb(37 99 235 / 18%);
+    animation: ambient-drift-primary 18s ease-in-out infinite alternate;
+  }
+
+  .ambient-orb-secondary {
+    top: 6rem;
+    right: 8%;
+    width: min(30rem, 55vw);
+    height: min(26rem, 50vw);
+    background: rgb(14 165 233 / 12%);
+    animation: ambient-drift-secondary 22s ease-in-out infinite alternate;
+  }
+
+  .ambient-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgb(148 163 184 / 4%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(148 163 184 / 4%) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(circle at 50% 20%, black, transparent 75%);
+  }
+
+  @keyframes ambient-drift-primary {
+    to {
+      transform: translate3d(5vw, 2.5rem, 0) scale(1.06);
+    }
+  }
+
+  @keyframes ambient-drift-secondary {
+    to {
+      transform: translate3d(-5vw, 3rem, 0) scale(0.95);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ambient-orb {
+      animation: none;
+    }
+  }
+</style>

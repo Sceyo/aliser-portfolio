@@ -247,6 +247,7 @@ export const SITE_CONTENT: SiteContent = {
       ],
       linkPreview: "https://pad-q.vercel.app/",
       linkSource: "https://github.com/Sceyo/PadQ",
+      caseStudyUrl: "/case-studies/pad-q",
       image: "/project-images/Padq/homepage.jpg",
     },
     {
