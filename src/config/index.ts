@@ -8,10 +8,10 @@ export const SITE_CONFIG: SiteConfig = {
   lang: "en",
   siteLogo: "/Formal Photo.jpg",
   navLinks: [
-    { text: "How I Work", href: "#how-i-work" },
     { text: "Projects", href: "#projects" },
     { text: "Experience", href: "#experience" },
     { text: "Skills", href: "#skills" },
+    { text: "How I Work", href: "#how-i-work" },
     { text: "About", href: "#about" },
   ],
   socialLinks: [

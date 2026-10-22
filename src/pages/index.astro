@@ -13,7 +13,6 @@ import "../styles/global.css";
 
 <Layout>
   <Hero {...SITE_CONTENT.hero} />
-  <HowIWork />
   <Projects projects={SITE_CONTENT.projects} />
   <Experience experience={SITE_CONTENT.experience} />
   <Skills
@@ -22,5 +21,6 @@ import "../styles/global.css";
     additionalCoursework={SITE_CONTENT.skillsAndCertifications
       .additionalCoursework}
   />
+  <HowIWork />
   <About {...SITE_CONTENT.about} name={SITE_CONTENT.hero.name} />
 </Layout>
