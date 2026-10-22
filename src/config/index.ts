@@ -8,8 +8,8 @@ export const SITE_CONFIG: SiteConfig = {
   lang: "en",
   siteLogo: "/Formal Photo.jpg",
   navLinks: [
-    { text: "Projects", href: "#projects" },
     { text: "How I Work", href: "#how-i-work" },
+    { text: "Projects", href: "#projects" },
     { text: "Experience", href: "#experience" },
     { text: "Skills", href: "#skills" },
     { text: "About", href: "#about" },
@@ -360,7 +360,7 @@ export const SITE_CONTENT: SiteContent = {
         "Microsoft Power Automate",
         "Vitest",
       ],
-      aiTools: ["Codex", "Claude Code"],
+      aiTools: ["Codex", "Claude Code", "Gemini"],
       other: [
         "Networking Fundamentals",
         "IT Operations",
@@ -423,7 +423,7 @@ export const SITE_CONTENT: SiteContent = {
   },
   about: {
     description:
-      "I’m Francis Aliser, a Cebu-based full-stack developer and software engineer who graduated with a BS in Information Technology from the University of San Carlos on July 3, 2026. I was an Academic & Financial Scholar under the Redemptorist Educational Assistance Program from 2020 to 2026. I enjoy building practical systems that connect clean interfaces with reliable backend services. My experience spans retail platforms, workflow automation, real-time applications, cloud databases, and enterprise IT operations.",
+      "I’m Francis Aliser, a Cebu-based full-stack developer and software engineer holding a BS in Information Technology from the University of San Carlos. I specialize in building practical, production-ready systems that connect responsive interfaces with reliable backend services. My experience spans real-time distributed applications, retail platforms, automated workflow pipelines, cloud databases, and enterprise IT operations.",
     image: "/Formal Photo Big.jpg",
   },
 };
