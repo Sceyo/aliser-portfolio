@@ -5,7 +5,15 @@ import type { AboutProps, HeroProps } from "@types";
 
 type Props = AboutProps & Pick<HeroProps, "name">;
 
-const { description, image, name } = Astro.props;
+const { image, name } = Astro.props;
+
+const workDomains: string[] = [
+  "Real-time distributed apps",
+  "Retail platforms",
+  "Workflow automation",
+  "Cloud databases",
+  "Enterprise IT operations",
+];
 ---
 
 <Section
@@ -15,66 +23,108 @@ const { description, image, name } = Astro.props;
   subtitle="Background, engineering philosophy, and the principles that shape my work."
 >
   <div
-    class="relative overflow-hidden rounded-3xl border border-white/10 bg-[#151d27]/70 p-6 sm:p-9 md:p-10 backdrop-blur shadow-2xl transition-all duration-300 hover:border-primary/30"
+    class="relative overflow-hidden rounded-3xl border border-white/10 bg-[#151d27]/75 p-6 sm:p-10 md:p-12 backdrop-blur shadow-2xl transition-all duration-300 hover:border-primary/30"
     data-reveal
   >
-    <div class="grid gap-8 lg:grid-cols-12 lg:items-center">
+    <!-- Top Two-Column Grid: Bio & Framed Portrait -->
+    <div class="grid gap-10 lg:grid-cols-12 lg:items-start">
       <!-- Left: Story & Highlights -->
       <div class="space-y-6 lg:col-span-8">
-        <div class="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3.5 py-1 text-xs font-semibold text-primary">
+        <div class="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1 text-xs font-semibold text-primary">
           <span class="h-2 w-2 rounded-full bg-primary animate-pulse" aria-hidden="true"></span>
           Full-Stack Developer &amp; Systems Engineer
         </div>
 
-        <p class="text-base sm:text-lg leading-relaxed text-white/90">
-          {description}
+        <h3 class="font-serif text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl leading-tight">
+          Interfaces people enjoy, backed by systems that don’t break.
+        </h3>
+
+        <p class="text-base sm:text-lg leading-relaxed text-neutral">
+          I’m <strong class="font-semibold text-white">Francis Aliser</strong>, a Cebu-based full-stack developer with a BS in Information Technology from the University of San Carlos. I build practical, production-ready systems that connect responsive interfaces with reliable backend services.
         </p>
 
-        <!-- Quick Facts Pill Grid -->
-        <div class="grid gap-3 pt-4 sm:grid-cols-3 border-t border-white/5">
-          <div class="rounded-xl border border-white/5 bg-white/[0.02] p-3.5">
-            <dt class="text-[0.68rem] font-semibold tracking-wider text-white/40 uppercase">
-              Education
-            </dt>
-            <dd class="mt-1 font-serif text-xs sm:text-sm font-semibold text-white">
-              BS IT · Univ. of San Carlos
-            </dd>
-          </div>
-          <div class="rounded-xl border border-white/5 bg-white/[0.02] p-3.5">
-            <dt class="text-[0.68rem] font-semibold tracking-wider text-white/40 uppercase">
-              Location
-            </dt>
-            <dd class="mt-1 font-serif text-xs sm:text-sm font-semibold text-white">
-              Cebu, Philippines (UTC+8)
-            </dd>
-          </div>
-          <div class="rounded-xl border border-white/5 bg-white/[0.02] p-3.5">
-            <dt class="text-[0.68rem] font-semibold tracking-wider text-white/40 uppercase">
-              Availability
-            </dt>
-            <dd class="mt-1 font-serif text-xs sm:text-sm font-semibold text-emerald-400">
-              Open to Opportunities
-            </dd>
+        <!-- Where I've worked / Domain Pills -->
+        <div class="pt-2">
+          <span class="block font-mono text-xs font-semibold tracking-wider text-white/45 uppercase mb-3">
+            Where I’ve Worked
+          </span>
+          <div class="flex flex-wrap gap-2.5">
+            {
+              workDomains.map((domain) => (
+                <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white/80 transition-all duration-200 hover:border-primary/50 hover:bg-white/10 hover:text-white">
+                  {domain}
+                </span>
+              ))
+            }
           </div>
         </div>
       </div>
 
-      <!-- Right: Portrait Presentation -->
-      <div class="flex justify-center lg:col-span-4">
-        <div class="relative w-full max-w-[240px] sm:max-w-[260px]">
-          <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-black/50 p-2.5 shadow-2xl shadow-black/50 transition-all duration-300 hover:border-primary/40">
+      <!-- Right: Portrait with Offset Accent Frame -->
+      <div class="flex justify-center lg:col-span-4 lg:justify-end">
+        <div class="relative w-full max-w-[260px] sm:max-w-[280px]">
+          <!-- Offset decorative border frame -->
+          <div
+            class="absolute inset-0 translate-x-3 translate-y-3 rounded-2xl border border-emerald-400/40 pointer-events-none transition-transform duration-300 group-hover:translate-x-4 group-hover:translate-y-4"
+            aria-hidden="true"
+          >
+          </div>
+
+          <!-- Main portrait card -->
+          <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0e141b] shadow-2xl transition-all duration-300 hover:border-primary/40">
             <Image
-              class="aspect-[4/5] w-full rounded-xl object-cover"
+              class="aspect-[4/5] w-full object-cover object-top"
               src={image}
-              width="260"
-              height="325"
-              alt={name}
+              width="280"
+              height="350"
+              alt={`Portrait of ${name}`}
             />
-            <div class="mt-2.5 flex items-center justify-center gap-1.5 pb-0.5 text-center font-mono text-[0.72rem] font-medium text-white/60">
-              <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-              {name}
+
+            <!-- Floating status badge inside portrait -->
+            <div class="absolute bottom-3 left-3 right-3 flex items-center justify-center gap-2 rounded-full border border-emerald-400/30 bg-[#0a0e15]/85 px-3 py-1.5 backdrop-blur text-xs font-medium text-emerald-400 shadow-lg">
+              <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true"></span>
+              Open to opportunities
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Metadata Bar: 3 Columns with Hairline Divider -->
+    <div class="mt-12 pt-8 border-t border-white/10 grid gap-6 sm:grid-cols-3">
+      <div class="space-y-1">
+        <span class="block font-mono text-[0.68rem] font-bold tracking-widest text-white/45 uppercase">
+          Education
+        </span>
+        <div class="font-serif text-base sm:text-lg font-semibold text-white">
+          BS Information Technology
+        </div>
+        <div class="text-xs text-neutral">
+          University of San Carlos
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <span class="block font-mono text-[0.68rem] font-bold tracking-widest text-white/45 uppercase">
+          Location
+        </span>
+        <div class="font-serif text-base sm:text-lg font-semibold text-white">
+          Cebu, Philippines
+        </div>
+        <div class="text-xs text-neutral">
+          UTC+8 · remote-friendly
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <span class="block font-mono text-[0.68rem] font-bold tracking-widest text-white/45 uppercase">
+          Availability
+        </span>
+        <div class="font-serif text-base sm:text-lg font-semibold text-emerald-400">
+          Open to Opportunities
+        </div>
+        <div class="text-xs text-neutral">
+          Full-time or contract
         </div>
       </div>
     </div>

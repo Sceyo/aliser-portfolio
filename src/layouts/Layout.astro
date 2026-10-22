@@ -3,6 +3,7 @@ import Header from "@components/Header.astro";
 import { Font } from "astro:assets";
 import { SITE_CONFIG, SITE_CONTENT } from "@config";
 import Footer from "@components/Footer.astro";
+import ResumeModal from "@components/ResumeModal.astro";
 import Analytics from "@vercel/analytics/astro";
 import "../styles/global.css";
 
@@ -110,6 +111,7 @@ const structuredData = {
       <slot />
     </main>
     <Footer author={author} socialLinks={socialLinks} />
+    <ResumeModal resumeUrl={SITE_CONTENT.hero.resume} />
     <script>
       import { track } from "@vercel/analytics";
       import { animate, inView, stagger } from "motion";
