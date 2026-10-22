@@ -68,8 +68,8 @@ function getDisplayDomain(url?: string): string | null {
 
                 <!-- 2. Bottom Content Section (Matching Reference Screenshot) -->
                 <div class="p-6 sm:p-8 md:p-10">
-                  <!-- Header Row: Title on Left, Badges & Plus (+) Button on Right -->
-                  <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <!-- Header Row: Title on Left, Badges on Right -->
+                  <div class="flex flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between">
                     <div>
                       <h3 class="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-white">
                         {project.name}
@@ -80,8 +80,8 @@ function getDisplayDomain(url?: string): string | null {
                       </p>
                     </div>
 
-                    <!-- Right Controls: Badges and Interactive (+) Sign Button -->
-                    <div class="flex items-center gap-3 self-start sm:self-auto">
+                    <!-- Right Badges -->
+                    <div class="flex flex-wrap items-center gap-2 self-start sm:self-auto">
                       {isPannEcosystem && (
                         <span class="rounded-full border border-amber-400/20 bg-amber-400/10 px-3 py-1 font-mono text-xs text-amber-300">
                           PANN Ecosystem
@@ -92,15 +92,6 @@ function getDisplayDomain(url?: string): string | null {
                           Featured
                         </span>
                       )}
-
-                      <!-- User requested: "+" sign on right side with rotate dropdown effect -->
-                      <span
-                        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-xl font-medium text-primary shadow-sm transition-all duration-300 group-open/project:rotate-45 group-open/project:bg-primary group-open/project:text-white group-hover/project:border-primary/50 group-hover/project:bg-white/10"
-                        aria-hidden="true"
-                        title="Toggle project deep dive"
-                      >
-                        +
-                      </span>
                     </div>
                   </div>
 
@@ -121,49 +112,61 @@ function getDisplayDomain(url?: string): string | null {
                     ))}
                   </ul>
 
-                  <!-- Direct Actions Row (Live Demo, Source Code, Case Study) -->
-                  <div class="mt-6 flex flex-wrap items-center gap-6 border-t border-white/5 pt-5 text-sm font-semibold text-white">
-                    {project.linkPreview && (
-                      <a
-                        href={project.linkPreview}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        data-analytics-event="project_click"
-                        data-analytics-project={project.name}
-                        data-analytics-destination="live"
-                        class="project-action-link inline-flex items-center gap-1.5 text-primary transition hover:text-blue-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                      >
-                        Live demo <span aria-hidden="true">↗</span>
-                      </a>
-                    )}
-                    {project.linkSource && (
-                      <a
-                        href={project.linkSource}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        data-analytics-event="project_click"
-                        data-analytics-project={project.name}
-                        data-analytics-destination="source"
-                        class="project-action-link inline-flex items-center gap-1.5 text-white/80 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                      >
-                        Source code <span aria-hidden="true">↗</span>
-                      </a>
-                    )}
-                    {project.caseStudyUrl && (
-                      <a
-                        href={project.caseStudyUrl}
-                        data-analytics-event="project_click"
-                        data-analytics-project={project.name}
-                        data-analytics-destination="case_study"
-                        class="project-action-link inline-flex items-center gap-1.5 text-emerald-400 transition hover:text-emerald-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                      >
-                        Case study <span aria-hidden="true">↗</span>
-                      </a>
-                    )}
+                  <!-- Direct Actions Row with Plus (+) Sign Button in the Lower Right -->
+                  <div class="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/5 pt-5 text-sm font-semibold text-white">
+                    <div class="flex flex-wrap items-center gap-5 sm:gap-6">
+                      {project.linkPreview && (
+                        <a
+                          href={project.linkPreview}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          data-analytics-event="project_click"
+                          data-analytics-project={project.name}
+                          data-analytics-destination="live"
+                          class="project-action-link inline-flex items-center gap-1.5 text-primary transition hover:text-blue-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                        >
+                          Live demo <span aria-hidden="true">↗</span>
+                        </a>
+                      )}
+                      {project.linkSource && (
+                        <a
+                          href={project.linkSource}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          data-analytics-event="project_click"
+                          data-analytics-project={project.name}
+                          data-analytics-destination="source"
+                          class="project-action-link inline-flex items-center gap-1.5 text-white/80 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                        >
+                          Source code <span aria-hidden="true">↗</span>
+                        </a>
+                      )}
+                      {project.caseStudyUrl && (
+                        <a
+                          href={project.caseStudyUrl}
+                          data-analytics-event="project_click"
+                          data-analytics-project={project.name}
+                          data-analytics-destination="case_study"
+                          class="project-action-link inline-flex items-center gap-1.5 text-emerald-400 transition hover:text-emerald-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                        >
+                          Case study <span aria-hidden="true">↗</span>
+                        </a>
+                      )}
+                    </div>
 
-                    <span class="ml-auto text-xs text-white/40 hidden sm:inline-block">
-                      Click card or + for deep dive
-                    </span>
+                    <!-- Lower Right: Interactive (+) Sign Button and Details Label -->
+                    <div class="ml-auto flex items-center gap-3">
+                      <span class="text-xs sm:text-sm font-medium text-white/60 transition-colors group-hover/project:text-white">
+                        Project details
+                      </span>
+                      <span
+                        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-xl font-medium text-primary shadow-sm transition-all duration-300 group-open/project:rotate-45 group-open/project:bg-primary group-open/project:text-white group-hover/project:border-primary/50 group-hover/project:bg-white/10"
+                        aria-hidden="true"
+                        title="Toggle project deep dive"
+                      >
+                        +
+                      </span>
+                    </div>
                   </div>
                 </div>
               </summary>
