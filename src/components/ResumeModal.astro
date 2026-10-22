@@ -25,67 +25,27 @@ const { resumeUrl = "/francis-aliser-resume.pdf" } = Astro.props;
   <!-- Modal Card Dialog -->
   <div
     id="resume-modal-card"
-    class="relative z-10 flex h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-white/15 bg-[#151d27] shadow-2xl shadow-black/80 transition-all duration-300"
+    class="relative z-10 flex h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl border border-white/15 bg-[#151d27] shadow-2xl shadow-black/80 transition-all duration-300"
   >
-    <!-- Upper Right Control Header -->
+    <!-- Upper Control Header (Matches Portfolio Typography) -->
     <div
-      class="flex items-center justify-between border-b border-white/10 bg-[#0e141b]/90 px-4 py-3 backdrop-blur"
+      class="flex items-center justify-between border-b border-white/10 bg-[#0e141b]/95 px-5 py-3.5 backdrop-blur"
     >
-      <div class="flex items-center gap-2">
-        <span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
-        <span class="font-mono text-xs font-semibold tracking-wider text-white/70 uppercase">
-          Francis Aliser — Résumé (PDF)
-        </span>
+      <div class="flex items-center gap-2.5">
+        <span class="h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true"></span>
+        <h3 class="font-serif text-sm sm:text-base font-semibold tracking-normal text-white">
+          Francis Aliser <span class="font-sans text-xs sm:text-sm font-normal text-neutral">· Résumé</span>
+        </h3>
       </div>
 
-      <!-- Control Buttons (Fullscreen, New Tab, Close) -->
-      <div class="flex items-center gap-1.5 sm:gap-2">
-        <!-- Fullscreen Button -->
-        <button
-          type="button"
-          id="resume-fullscreen-btn"
-          class="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/70 transition hover:bg-white/15 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary"
-          title="Toggle Full Screen"
-          aria-label="Toggle Full Screen"
-        >
-          <!-- Expand Icon -->
-          <svg
-            id="fullscreen-expand-icon"
-            class="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-            ></path>
-          </svg>
-          <!-- Compress Icon (Hidden by default) -->
-          <svg
-            id="fullscreen-compress-icon"
-            class="hidden h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 9L4 4m0 5h5m-5 0V4m11 5h5m0 0L15 9m5 0V4m-5 11l5 5m0-5v5m0 0h-5m-6-5l-5 5m0 0h5m-5 0v-5"
-            ></path>
-          </svg>
-        </button>
-
+      <!-- Controls: Open in New Tab & Close (Full screen button removed as requested) -->
+      <div class="flex items-center gap-2">
         <!-- Open External In New Tab -->
         <a
           href={resumeUrl}
           target="_blank"
           rel="noopener noreferrer"
-          class="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/70 transition hover:bg-white/15 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary"
+          class="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-neutral transition hover:border-white/25 hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary"
           title="Open in new tab"
           aria-label="Open resume in new tab"
         >
@@ -108,7 +68,7 @@ const { resumeUrl = "/francis-aliser-resume.pdf" } = Astro.props;
         <button
           type="button"
           id="resume-close-icon-btn"
-          class="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/70 transition hover:bg-red-500/20 hover:text-red-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary"
+          class="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-neutral transition hover:border-white/25 hover:bg-red-500/15 hover:text-red-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary"
           title="Close resume preview"
           aria-label="Close modal"
         >
@@ -132,7 +92,7 @@ const { resumeUrl = "/francis-aliser-resume.pdf" } = Astro.props;
     <!-- Center Resume Viewer -->
     <div class="relative flex-1 bg-[#1a2330] p-2 sm:p-4">
       <div
-        class="h-full w-full overflow-hidden rounded-xl bg-white shadow-2xl"
+        class="h-full w-full overflow-hidden rounded-2xl bg-white shadow-2xl"
       >
         <iframe
           id="resume-iframe"
@@ -144,18 +104,18 @@ const { resumeUrl = "/francis-aliser-resume.pdf" } = Astro.props;
       </div>
     </div>
 
-    <!-- Bottom Action Bar (Matching User Reference Image) -->
+    <!-- Bottom Action Bar (Follows Portfolio Typography & Button System) -->
     <div
-      class="flex flex-wrap items-center justify-center gap-3 border-t border-white/10 bg-[#0e141b]/95 px-4 py-3.5"
+      class="flex flex-wrap items-center justify-center gap-3.5 border-t border-white/10 bg-[#0e141b]/95 px-5 py-4"
     >
       <a
         href={resumeUrl}
         download="Francis-Aliser-Resume.pdf"
         id="resume-download-btn"
-        class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white px-5 py-2.5 font-mono text-xs font-semibold text-black shadow-md transition hover:bg-neutral-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        class="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 font-sans text-xs sm:text-sm font-semibold text-white shadow-md shadow-primary/25 transition-all duration-200 hover:bg-blue-500 hover:shadow-xl hover:shadow-primary/35 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
         <svg
-          class="h-3.5 w-3.5"
+          class="h-4 w-4"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -167,15 +127,15 @@ const { resumeUrl = "/francis-aliser-resume.pdf" } = Astro.props;
             d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
           ></path>
         </svg>
-        <span>download cv</span>
+        <span>Download Resume</span>
       </a>
 
       <button
         type="button"
         id="resume-close-btn"
-        class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-2.5 font-mono text-xs font-semibold text-white/90 shadow-md transition hover:bg-white/15 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-2.5 font-sans text-xs sm:text-sm font-semibold text-neutral transition-all duration-200 hover:border-white/30 hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
-        <span>close</span>
+        <span>Close</span>
       </button>
     </div>
   </div>
@@ -183,16 +143,10 @@ const { resumeUrl = "/francis-aliser-resume.pdf" } = Astro.props;
 
 <script>
   const modal = document.getElementById("resume-modal");
-  const modalCard = document.getElementById("resume-modal-card");
   const backdrop = document.getElementById("resume-modal-backdrop");
   const iframe = document.getElementById("resume-iframe") as HTMLIFrameElement | null;
-  const fullscreenBtn = document.getElementById("resume-fullscreen-btn");
-  const expandIcon = document.getElementById("fullscreen-expand-icon");
-  const compressIcon = document.getElementById("fullscreen-compress-icon");
   const closeIconBtn = document.getElementById("resume-close-icon-btn");
   const closeBtn = document.getElementById("resume-close-btn");
-
-  let isFullscreen = false;
 
   function openResumeModal() {
     if (!modal) return;
@@ -212,29 +166,6 @@ const { resumeUrl = "/francis-aliser-resume.pdf" } = Astro.props;
     modal.classList.add("hidden");
     modal.classList.remove("flex");
     document.body.style.overflow = "";
-
-    // Exit fullscreen if active
-    if (isFullscreen) {
-      toggleFullscreen();
-    }
-  }
-
-  function toggleFullscreen() {
-    if (!modalCard) return;
-
-    isFullscreen = !isFullscreen;
-
-    if (isFullscreen) {
-      modalCard.classList.remove("max-w-4xl", "h-[90vh]", "rounded-2xl");
-      modalCard.classList.add("fixed", "inset-0", "h-full", "w-full", "rounded-none", "z-50");
-      expandIcon?.classList.add("hidden");
-      compressIcon?.classList.remove("hidden");
-    } else {
-      modalCard.classList.add("max-w-4xl", "h-[90vh]", "rounded-2xl");
-      modalCard.classList.remove("fixed", "inset-0", "h-full", "w-full", "rounded-none", "z-50");
-      expandIcon?.classList.remove("hidden");
-      compressIcon?.classList.add("hidden");
-    }
   }
 
   // Hook all triggers with [data-open-resume]
@@ -247,7 +178,6 @@ const { resumeUrl = "/francis-aliser-resume.pdf" } = Astro.props;
     }
   });
 
-  fullscreenBtn?.addEventListener("click", toggleFullscreen);
   closeIconBtn?.addEventListener("click", closeResumeModal);
   closeBtn?.addEventListener("click", closeResumeModal);
   backdrop?.addEventListener("click", closeResumeModal);
