@@ -10,7 +10,12 @@ interface Props {
 const { projects } = Astro.props;
 ---
 
-<Section text="Featured Projects" href="projects">
+<Section
+  index="01"
+  text="Featured Projects"
+  href="projects"
+  subtitle="Production applications, client capstones, and civic infrastructure built for real-world operations."
+>
   {
     projects.map((project) => (
       <article
@@ -38,6 +43,11 @@ const { projects } = Astro.props;
                 <span class="rounded-full bg-primary/15 px-3 py-1.5 text-primary">
                   {project.projectType}
                 </span>
+                {(project.name.startsWith("PANN") || project.name === "Ramyeon Corner") && (
+                  <span class="rounded-full border border-amber-400/20 bg-amber-400/10 px-2.5 py-1 text-[0.68rem] text-amber-300 font-mono">
+                    PANN Ecosystem
+                  </span>
+                )}
                 {project.featured && (
                   <span class="text-emerald-300">Featured project</span>
                 )}

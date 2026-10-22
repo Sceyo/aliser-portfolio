@@ -7,6 +7,7 @@ import Projects from "@components/Projects.astro";
 import HowIWork from "@components/HowIWork.astro";
 import About from "@components/About.astro";
 import Skills from "@components/Skills.astro";
+import Contact from "@components/Contact.astro";
 
 import "../styles/global.css";
 ---
@@ -23,4 +24,5 @@ import "../styles/global.css";
   />
   <HowIWork />
   <About {...SITE_CONTENT.about} name={SITE_CONTENT.hero.name} />
+  <Contact />
 </Layout>

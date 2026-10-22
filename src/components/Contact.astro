@@ -1,0 +1,105 @@
+---
+import Section from "./Section.astro";
+import { SITE_CONFIG, SITE_CONTENT } from "@config";
+
+const email = SITE_CONTENT.hero.email || "francisaliserit@gmail.com";
+const socialLinks = SITE_CONFIG.socialLinks || [];
+---
+
+<Section
+  index="06"
+  text="Contact"
+  href="contact"
+  subtitle="Let's connect and build something dependable together."
+>
+  <div
+    class="relative overflow-hidden rounded-3xl border border-white/10 bg-[#151d27]/80 p-8 sm:p-12 md:p-14 backdrop-blur shadow-2xl"
+    data-reveal
+  >
+    <!-- Background subtle ambient glow -->
+    <div
+      class="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-primary/10 blur-3xl"
+      aria-hidden="true"
+    >
+    </div>
+    <div
+      class="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-emerald-500/10 blur-3xl"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="relative z-10 max-w-3xl">
+      <!-- Status pill -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-semibold text-emerald-400">
+        <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true"></span>
+        Available for Opportunities
+      </div>
+
+      <!-- Headline -->
+      <h3 class="mt-6 font-serif text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl leading-tight">
+        Have an operation that needs better software?
+      </h3>
+
+      <!-- Body -->
+      <p class="mt-4 text-base sm:text-lg text-neutral leading-relaxed">
+        Whether you're looking for a full-stack engineer, wanting to automate a manual workflow, or seeking a technical collaborator for a mission-critical project, I'd love to talk.
+      </p>
+
+      <!-- Primary Action: Direct Mailto Button -->
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <a
+          href={`mailto:${email}`}
+          data-analytics-event="contact_click"
+          data-analytics-destination="email"
+          class="group inline-flex items-center gap-3 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all duration-200 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          <span>{email}</span>
+          <span class="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">→</span>
+        </a>
+
+        {
+          SITE_CONTENT.hero.resume && (
+            <a
+              href={SITE_CONTENT.hero.resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-analytics-event="contact_click"
+              data-analytics-destination="resume"
+              class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:border-white/20 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              <span>Download Resume</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          )
+        }
+      </div>
+
+      <!-- Social Channels & Metadata -->
+      <div class="mt-12 pt-8 border-t border-white/10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <span class="text-xs font-semibold tracking-wider text-white/40 uppercase block mb-2">
+            Connect Across Channels
+          </span>
+          <div class="flex flex-wrap gap-4">
+            {
+              socialLinks.map((social) => (
+                <a
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-sm font-medium text-white/70 transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                >
+                  {social.text} <span class="text-xs text-white/30" aria-hidden="true">↗</span>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="text-xs font-mono text-white/50">
+          Cebu, Philippines · UTC+8
+        </div>
+      </div>
+    </div>
+  </div>
+</Section>

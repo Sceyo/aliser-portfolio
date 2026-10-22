@@ -13,6 +13,7 @@ export const SITE_CONFIG: SiteConfig = {
     { text: "Skills", href: "#skills" },
     { text: "How I Work", href: "#how-i-work" },
     { text: "About", href: "#about" },
+    { text: "Contact", href: "#contact" },
   ],
   socialLinks: [
     { text: "Instagram", href: "https://www.instagram.com/francisaliser/" },
@@ -56,7 +57,7 @@ export const SITE_CONTENT: SiteContent = {
       featured: true,
       projectType: "Client capstone · Retail operations",
       summary:
-        "A centralized administration platform for staff accounts, inventory, suppliers, promotions, customers, sales analytics, notifications, and operational logs.",
+        "Part of the 3-tier PANN Ramyeon operations ecosystem. A centralized administration platform for staff accounts, inventory, suppliers, promotions, customers, sales analytics, notifications, and operational logs.",
       role: "Full-Stack Developer",
       status: "Deployment candidate · Development paused by client",
       contribution:
@@ -106,7 +107,7 @@ export const SITE_CONTENT: SiteContent = {
       featured: true,
       projectType: "Client capstone · Point of sale",
       summary:
-        "An offline-capable restaurant POS designed to keep cashier operations running locally and synchronize sales, inventory, and shift records with the cloud when connectivity returns.",
+        "Part of the 3-tier PANN Ramyeon operations ecosystem. An offline-capable restaurant POS designed to keep cashier operations running locally and synchronize sales, inventory, and shift records with the cloud when connectivity returns.",
       role: "Full-Stack Developer",
       status: "Working prototype · Migration paused by client",
       contribution:
@@ -155,7 +156,7 @@ export const SITE_CONTENT: SiteContent = {
       featured: true,
       projectType: "Client capstone · Online ordering",
       summary:
-        "A mobile-friendly customer ordering experience for browsing products and promotions, placing pickup or delivery orders, and managing loyalty activity.",
+        "Part of the 3-tier PANN Ramyeon operations ecosystem. A mobile-friendly customer ordering experience for browsing products and promotions, placing pickup or delivery orders, and managing loyalty activity.",
       role: "Shared Backend & Integrations Contributor",
       status: "Deployed and evaluated · Development paused",
       contribution:
