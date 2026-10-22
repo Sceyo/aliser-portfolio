@@ -87,8 +87,29 @@ const { siteLogo, navLinks } = Astro.props;
   };
 
   button?.addEventListener("click", toggleMenu);
+
+  // Smooth scroll and clean hash navigation on homepage
   navItems.forEach((item) => {
-    item?.addEventListener("click", closeMenu);
+    item?.addEventListener("click", (e) => {
+      closeMenu();
+
+      const href = item.getAttribute("href") || "";
+      if (href.includes("#")) {
+        const hash = href.split("#")[1];
+        const targetElement = document.getElementById(hash);
+
+        // If on homepage, smooth-scroll and update hash directly without page reload
+        if (
+          targetElement &&
+          (window.location.pathname === "/" || window.location.pathname === "")
+        ) {
+          e.preventDefault();
+          targetElement.scrollIntoView({ behavior: "smooth" });
+          history.pushState(null, "", `#${hash}`);
+          updateActiveNav();
+        }
+      }
+    });
   });
 
   document.addEventListener("keydown", (event) => {
@@ -98,43 +119,84 @@ const { siteLogo, navLinks } = Astro.props;
     }
   });
 
-  // Update navigation based on scroll position with Intersection Observer
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          navItems.forEach((item) => {
-            if (item.getAttribute("href") === `#${entry.target.id}`) {
-              item.classList.add("text-white", "md:after:opacity-100");
-            } else {
-              item.classList.remove("text-white", "md:after:opacity-100");
-            }
-          });
+  // Track sections and synchronize active nav indicator + URL in address bar
+  const sections = Array.from(document.querySelectorAll<HTMLElement>("section[id]"));
+
+  function updateActiveNav() {
+    if (sections.length === 0) return;
+
+    // Detect if user has reached bottom of page (e.g. Contact section & footer)
+    const isAtBottom =
+      window.innerHeight + window.scrollY >=
+      document.documentElement.scrollHeight - 90;
+
+    let currentSectionId = "";
+
+    if (isAtBottom) {
+      currentSectionId = sections[sections.length - 1].id;
+    } else {
+      // Find section currently in the reading viewport (with header offset)
+      const scrollPosition = window.scrollY + 140;
+      for (const section of sections) {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        if (scrollPosition >= top && scrollPosition < top + height) {
+          currentSectionId = section.id;
+          break;
+        }
+      }
+    }
+
+    if (!currentSectionId && window.scrollY < sections[0].offsetTop) {
+      currentSectionId = sections[0].id;
+    }
+
+    if (currentSectionId) {
+      // Update active styling on navigation items
+      navItems.forEach((item) => {
+        const itemHref = item.getAttribute("href") || "";
+        if (itemHref.endsWith(`#${currentSectionId}`)) {
+          item.classList.add("text-white", "md:after:opacity-100");
+        } else {
+          item.classList.remove("text-white", "md:after:opacity-100");
         }
       });
+
+      // Synchronize URL in browser address bar without jarring jumps or reloads
+      if (window.location.pathname === "/" || window.location.pathname === "") {
+        const targetHash =
+          currentSectionId === "hero" ? "" : `#${currentSectionId}`;
+        const currentHash = window.location.hash;
+
+        if (currentHash !== targetHash) {
+          const newUrl = targetHash
+            ? `${window.location.pathname}${targetHash}`
+            : window.location.pathname;
+          history.replaceState(null, "", newUrl);
+        }
+      }
+    }
+  }
+
+  // 60fps throttled scroll listener
+  let ticking = false;
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateActiveNav();
+          ticking = false;
+        });
+        ticking = true;
+      }
     },
-    {
-      // Use a narrow activation band instead of a visibility percentage so
-      // sections taller than the viewport can still become active.
-      rootMargin: "-20% 0px -70% 0px",
-      threshold: 0,
-    },
+    { passive: true },
   );
 
-  document.querySelectorAll("section").forEach((section) => {
-    observer.observe(section);
-  });
-
-  // Cleanup observer
-  document.onvisibilitychange = () => {
-    if (document.visibilityState === "hidden") {
-      observer.disconnect();
-    } else {
-      document.querySelectorAll("section").forEach((section) => {
-        observer.observe(section);
-      });
-    }
-  };
+  // Initial check on load and when hash changes
+  updateActiveNav();
+  window.addEventListener("hashchange", updateActiveNav);
 </script>
 
 <style>

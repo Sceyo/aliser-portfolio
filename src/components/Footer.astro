@@ -44,8 +44,8 @@ const email = SITE_CONTENT.hero.email || "francisaliserit@gmail.com";
               navLinks.map((link) => (
                 <li>
                   <a
-                    href={link.href}
-                    class="text-neutral transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    href={link.href.startsWith("#") ? `/${link.href}` : link.href}
+                    class="footer-nav-link text-neutral transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   >
                     {link.text}
                   </a>
@@ -140,3 +140,23 @@ const email = SITE_CONTENT.hero.email || "francisaliserit@gmail.com";
     </div>
   </div>
 </footer>
+
+<script>
+  document.querySelectorAll(".footer-nav-link").forEach((item) => {
+    item.addEventListener("click", (e) => {
+      const href = item.getAttribute("href") || "";
+      if (href.includes("#")) {
+        const hash = href.split("#")[1];
+        const targetElement = document.getElementById(hash);
+        if (
+          targetElement &&
+          (window.location.pathname === "/" || window.location.pathname === "")
+        ) {
+          e.preventDefault();
+          targetElement.scrollIntoView({ behavior: "smooth" });
+          history.pushState(null, "", `#${hash}`);
+        }
+      }
+    });
+  });
+</script>
