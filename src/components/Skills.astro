@@ -80,8 +80,9 @@ const categoryMeta: Record<
   <!-- Skills Categories Grid -->
   <div class="grid gap-6 md:grid-cols-2" data-reveal>
     {
-      Object.entries(skillCategories).map(([key, skills]) => {
+      Object.entries(skillCategories).map(([key, skills], index, allEntries) => {
         if (!skills || skills.length === 0) return null;
+        const isLastAndOdd = index === allEntries.length - 1 && allEntries.length % 2 !== 0;
         const meta = categoryMeta[key] || {
           label: key,
           iconPath: "M5 13l4 4L19 7",
@@ -89,7 +90,11 @@ const categoryMeta: Record<
         };
 
         return (
-          <div class="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#151d27]/70 p-5 backdrop-blur transition-all duration-300 hover:border-primary/40 hover:bg-[#151d27]/90 hover:shadow-xl hover:shadow-primary/5">
+          <div
+            class={`group relative overflow-hidden rounded-2xl border border-white/10 bg-[#151d27]/70 p-5 backdrop-blur transition-all duration-300 hover:border-primary/40 hover:bg-[#151d27]/90 hover:shadow-xl hover:shadow-primary/5 ${
+              isLastAndOdd ? "md:col-span-2" : ""
+            }`}
+          >
             <!-- Header with category icon and count -->
             <div class="mb-4 flex items-center justify-between border-b border-white/5 pb-3">
               <div class="flex items-center gap-2.5">
@@ -112,7 +117,7 @@ const categoryMeta: Record<
               {skills.map((skill) => (
                 <li class="group/chip inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2 text-xs font-medium text-white/90 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/50 hover:bg-white/[0.08] hover:text-white hover:shadow-md">
                   <span class="shrink-0 transition-transform duration-200 group-hover/chip:scale-110">
-                    <TechIcon name={skill} class="h-4 w-4" />
+                    <TechIcon name={skill} class="h-5 w-5" />
                   </span>
                   <span>{skill}</span>
                 </li>
