@@ -1,0 +1,224 @@
+---
+import { SITE_CONFIG } from "@config";
+
+const rawLinks = SITE_CONFIG.navLinks || [];
+// Prepend Home to the nav sections
+const sections = [
+  { text: "Home", href: "#hero" },
+  ...rawLinks,
+];
+
+// Number of subtle tick lines between each section
+const TICKS_PER_SECTION = 5;
+---
+
+<aside
+  class="fixed right-0 top-0 bottom-0 z-40 hidden xl:flex flex-col justify-center pointer-events-none select-none"
+  aria-label="Page section navigation"
+  id="side-stagger-nav"
+>
+  <div
+    class="pointer-events-auto flex flex-col justify-between py-12 pr-0 pl-10 h-full max-h-[82vh] w-48 relative"
+    id="side-stagger-container"
+  >
+    {
+      sections.map((section, sIndex) => {
+        const hash = section.href.startsWith("#") ? section.href.slice(1) : section.href;
+        return (
+          <div class="side-stagger-group flex flex-col items-end w-full">
+            <!-- Section Link Anchor -->
+            <a
+              href={`/#${hash}`}
+              data-section-target={hash}
+              class="side-stagger-link group flex items-center justify-end gap-3 w-full py-1 text-right focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary cursor-pointer"
+            >
+              <span class="side-stagger-label font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-white/40 transition-colors duration-200 group-hover:text-white">
+                {section.text}
+              </span>
+              <span
+                class="side-stagger-line block h-[1.5px] w-4 bg-white/25 transition-all duration-150 origin-right rounded-l-full group-hover:bg-white"
+                data-line
+              />
+            </a>
+
+            <!-- Sub-tick lines between section headers -->
+            {sIndex < sections.length - 1 && (
+              <div class="flex flex-col items-end w-full py-1 space-y-2.5">
+                {Array.from({ length: TICKS_PER_SECTION }).map(() => (
+                  <button
+                    type="button"
+                    tabindex="-1"
+                    data-section-target={hash}
+                    aria-label={`Jump toward ${section.text}`}
+                    class="side-stagger-subtick group/sub flex items-center justify-end w-full h-2 cursor-pointer focus:outline-none"
+                  >
+                    <span
+                      class="side-stagger-line block h-[1.5px] w-3 bg-white/15 transition-all duration-150 origin-right rounded-l-full group-hover/sub:bg-white"
+                      data-line
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })
+    }
+  </div>
+</aside>
+
+<script>
+  function initSideStaggerNav() {
+    const container = document.getElementById("side-stagger-container");
+    if (!container) return;
+
+    const lines = Array.from(container.querySelectorAll<HTMLElement>("[data-line]"));
+    const links = Array.from(container.querySelectorAll<HTMLElement>(".side-stagger-link"));
+    const labels = Array.from(container.querySelectorAll<HTMLElement>(".side-stagger-label"));
+
+    const BASE_WIDTH = 12; // Base tick length (px)
+    const MAX_EXPANSION = 68; // Max expansion length (px)
+    const MAX_DISTANCE = 115; // Proximity radius (px)
+
+    let isHovering = false;
+    let rafId: number | null = null;
+    let currentMouseY = 0;
+
+    // Smooth physics wave calculation on mouse move
+    function updateLines() {
+      if (!isHovering) {
+        lines.forEach((line) => {
+          const isParentActive = line.closest(".side-stagger-group")?.classList.contains("is-active");
+          line.style.width = isParentActive ? "26px" : `${BASE_WIDTH}px`;
+          line.style.backgroundColor = isParentActive ? "rgb(37 99 235)" : "rgb(255 255 255 / 0.2)";
+        });
+        rafId = null;
+        return;
+      }
+
+      lines.forEach((line) => {
+        const rect = line.getBoundingClientRect();
+        const lineY = rect.top + rect.height / 2;
+        const dist = Math.abs(lineY - currentMouseY);
+
+        if (dist < MAX_DISTANCE) {
+          // Smooth cosine wave
+          const factor = Math.cos((dist / MAX_DISTANCE) * (Math.PI / 2));
+          const width = BASE_WIDTH + factor * MAX_EXPANSION;
+          const opacity = 0.2 + factor * 0.8;
+
+          line.style.width = `${width}px`;
+          line.style.opacity = `${opacity}`;
+          line.style.backgroundColor = factor > 0.65 ? "#ffffff" : "rgb(255 255 255 / 0.5)";
+        } else {
+          line.style.width = `${BASE_WIDTH}px`;
+          line.style.opacity = "0.2";
+          line.style.backgroundColor = "rgb(255 255 255 / 0.2)";
+        }
+      });
+
+      rafId = null;
+    }
+
+    container.addEventListener("pointermove", (e) => {
+      isHovering = true;
+      currentMouseY = e.clientY;
+      if (!rafId) {
+        rafId = requestAnimationFrame(updateLines);
+      }
+    });
+
+    container.addEventListener("pointerleave", () => {
+      isHovering = false;
+      if (!rafId) {
+        rafId = requestAnimationFrame(updateLines);
+      }
+    });
+
+    // Smooth scroll on click (or redirect if on a case-study subpage)
+    container.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement | null;
+      const trigger = target?.closest<HTMLElement>("[data-section-target]");
+      if (!trigger) return;
+
+      const targetId = trigger.getAttribute("data-section-target");
+      if (!targetId) return;
+
+      const isHome = window.location.pathname === "/" || window.location.pathname === "";
+      if (isHome) {
+        const sectionEl = document.getElementById(targetId);
+        if (sectionEl) {
+          e.preventDefault();
+          sectionEl.scrollIntoView({ behavior: "smooth" });
+          history.pushState(null, "", `#${targetId}`);
+        }
+      } else {
+        // Navigate back to homepage hash
+        window.location.href = `/#${targetId}`;
+      }
+    });
+
+    // IntersectionObserver to highlight active section on the ruler
+    const sectionIds = links
+      .map((l) => l.getAttribute("data-section-target"))
+      .filter(Boolean) as string[];
+
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -65% 0px",
+      threshold: 0,
+    };
+
+    let activeSectionId = "";
+
+    function setActive(id: string) {
+      if (activeSectionId === id) return;
+      activeSectionId = id;
+
+      links.forEach((link, idx) => {
+        const linkId = link.getAttribute("data-section-target");
+        const group = link.closest(".side-stagger-group");
+        const label = labels[idx];
+
+        if (linkId === id) {
+          group?.classList.add("is-active");
+          if (label) {
+            label.classList.remove("text-white/40");
+            label.classList.add("text-white", "font-bold");
+          }
+        } else {
+          group?.classList.remove("is-active");
+          if (label) {
+            label.classList.remove("text-white", "font-bold");
+            label.classList.add("text-white/40");
+          }
+        }
+      });
+
+      if (!isHovering) {
+        updateLines();
+      }
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActive(entry.target.id);
+        }
+      });
+    }, observerOptions);
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    // Initial check for top/hero
+    if (window.scrollY < 200) {
+      setActive("hero");
+    }
+  }
+
+  initSideStaggerNav();
+  document.addEventListener("astro:page-load", initSideStaggerNav);
+</script>

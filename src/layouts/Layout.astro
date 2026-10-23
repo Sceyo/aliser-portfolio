@@ -4,6 +4,7 @@ import { Font } from "astro:assets";
 import { SITE_CONFIG, SITE_CONTENT } from "@config";
 import Footer from "@components/Footer.astro";
 import ResumeModal from "@components/ResumeModal.astro";
+import SideStaggerNav from "@components/SideStaggerNav.astro";
 import Analytics from "@vercel/analytics/astro";
 import "../styles/global.css";
 
@@ -107,6 +108,7 @@ const structuredData = {
   </head>
   <body class="bg-black font-sans">
     <Header siteLogo={siteLogo} navLinks={navLinks} />
+    <SideStaggerNav />
     <main class="mx-auto max-w-5xl px-5">
       <slot />
     </main>
@@ -121,24 +123,70 @@ const structuredData = {
       ).matches;
 
       if (!prefersReducedMotion) {
-        const heroItems = Array.from(
-          document.querySelectorAll<HTMLElement>("[data-hero-reveal]"),
+        const heroBadge = document.querySelector<HTMLElement>("[data-hero-badge]");
+        const heroSub = document.querySelector<HTMLElement>("[data-hero-sub]");
+        const heroWords = Array.from(
+          document.querySelectorAll<HTMLElement>(".hero-word"),
         );
+        const heroSummary = document.querySelector<HTMLElement>("[data-hero-summary]");
+        const heroActions = document.querySelector<HTMLElement>("[data-hero-actions]");
 
-        heroItems.forEach((item) => {
-          item.style.opacity = "0";
-          item.style.transform = "translateY(18px)";
-        });
+        if (heroBadge) {
+          heroBadge.style.opacity = "0";
+          heroBadge.style.transform = "translateY(14px)";
+          animate(
+            heroBadge,
+            { opacity: 1, transform: "translateY(0px)" },
+            { duration: 0.5, delay: 0.05, ease: [0.16, 1, 0.3, 1] },
+          );
+        }
 
-        animate(
-          heroItems,
-          { opacity: 1, transform: "translateY(0px)" },
-          {
-            duration: 0.65,
-            delay: stagger(0.08),
-            ease: [0.22, 1, 0.36, 1],
-          },
-        );
+        if (heroSub) {
+          heroSub.style.opacity = "0";
+          heroSub.style.transform = "translateY(16px)";
+          animate(
+            heroSub,
+            { opacity: 1, transform: "translateY(0px)" },
+            { duration: 0.55, delay: 0.12, ease: [0.16, 1, 0.3, 1] },
+          );
+        }
+
+        if (heroWords.length > 0) {
+          heroWords.forEach((word) => {
+            word.style.opacity = "0";
+            word.style.transform = "translateY(115%)";
+          });
+
+          animate(
+            heroWords,
+            { opacity: 1, transform: "translateY(0%)" },
+            {
+              duration: 0.65,
+              delay: stagger(0.038, { startDelay: 0.16 }),
+              ease: [0.16, 1, 0.3, 1],
+            },
+          );
+        }
+
+        if (heroSummary) {
+          heroSummary.style.opacity = "0";
+          heroSummary.style.transform = "translateY(16px)";
+          animate(
+            heroSummary,
+            { opacity: 1, transform: "translateY(0px)" },
+            { duration: 0.6, delay: 0.52, ease: [0.16, 1, 0.3, 1] },
+          );
+        }
+
+        if (heroActions) {
+          heroActions.style.opacity = "0";
+          heroActions.style.transform = "translateY(16px)";
+          animate(
+            heroActions,
+            { opacity: 1, transform: "translateY(0px)" },
+            { duration: 0.6, delay: 0.64, ease: [0.16, 1, 0.3, 1] },
+          );
+        }
 
         document
           .querySelectorAll<HTMLElement>("[data-reveal]")
